@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="UTNApiTalleres.Model\**" />
+    <Compile Remove="UTNApuTalleres.Data\**" />
+    <Content Remove="UTNApiTalleres.Model\**" />
+    <Content Remove="UTNApuTalleres.Data\**" />
+    <EmbeddedResource Remove="UTNApiTalleres.Model\**" />
+    <EmbeddedResource Remove="UTNApuTalleres.Data\**" />
+    <None Remove="UTNApiTalleres.Model\**" />
+    <None Remove="UTNApuTalleres.Data\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="UTNApiTalleres.Model\UTNApiTalleres.Model.csproj" />
+    <ProjectReference Include="UTNApuTalleres.Data\UTNApiTalleres.Data.csproj" />
+  </ItemGroup>
+
+
+</Project>

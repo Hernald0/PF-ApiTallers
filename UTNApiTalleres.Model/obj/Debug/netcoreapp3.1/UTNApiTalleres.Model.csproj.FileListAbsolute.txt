@@ -1,0 +1,10 @@
+C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.deps.json
+C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.dll
+C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.pdb
+C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.csproj.AssemblyReference.cache
+C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.AssemblyInfoInputs.cache
+C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.AssemblyInfo.cs
+C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.csproj.CoreCompileInputs.cache
+C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.dll
+C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.pdb
