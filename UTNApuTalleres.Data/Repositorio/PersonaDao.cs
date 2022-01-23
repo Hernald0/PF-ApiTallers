@@ -94,7 +94,7 @@ namespace UTNApiTalleres.Data.Repositorio
                             ""FechaMod"" = @FechaMod, 
                             ""UsrMod"" = @UsrMod 
                         WHERE ""Id"" = @Id";
-            Console.WriteLine(query);
+            
             var parameters = new DynamicParameters();
             
             parameters.Add("Id", persona.Id, DbType.Int32);

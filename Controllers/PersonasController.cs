@@ -67,7 +67,7 @@ namespace UTNApiTalleres.Controllers
 
             var oCreated = await _personaDao.create(Persona);
 
-            return Created("created", oCreated);
+            return Created("Se creo exitosamente.", oCreated);
         }
 
         [HttpPut]

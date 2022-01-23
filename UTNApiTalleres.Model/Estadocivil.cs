@@ -10,8 +10,8 @@ namespace WebApiTalleres.Models
         public int Id { get; set; }
         public string Descripcion { get; set; }
         public DateTime? FechaAlta { get; set; }
-        public int? UsuarioAlta { get; set; }
+        public string? UsuarioAlta { get; set; }
         public DateTime? FechaBaja { get; set; }
-        public int? UsuarioBaja { get; set; }
+        public string? UsuarioBaja { get; set; }
     }
 }
