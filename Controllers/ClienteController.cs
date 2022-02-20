@@ -11,43 +11,43 @@ using WebApiTalleres.Models;
 namespace UTNApiTalleres.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]   
-    public class PersonaController : ControllerBase
+    [ApiController]
+    public class ClienteController : ControllerBase
     {
+        private readonly IClienteDao _clienteDao;
 
-        private readonly IPersonaDao _personaDao;
-
-        public PersonaController(IPersonaDao PersonaDao)
+        public ClienteController(IClienteDao clienteDao)
         {
-            _personaDao = PersonaDao;
+            _clienteDao = clienteDao;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPersona()
+        public async Task<IActionResult> GetAllCliente()
         {
             try
             {
-                var personas = await _personaDao.findAll();
-                return Ok(personas);
+                var clientes = await _clienteDao.findAll();
+
+                return Ok(clientes);
+
             }
             catch (Exception ex)
             {
                 //log error
                 return StatusCode(500, ex.Message);
             }
-            //return Ok(await _personaDao.findAll());
+
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPersona(int id)
+        public async Task<IActionResult> GetCliente(int id)
         {
-            //return Ok( _personaDao.find(id));
             try
             {
-                var persona = await _personaDao.find(id);
-                if (persona == null)
+                var cliente = await _clienteDao.find(id);
+                if (cliente == null)
                     return NotFound();
-                return Ok(persona);
+                return Ok(cliente);
             }
             catch (Exception ex)
             {
@@ -57,37 +57,37 @@ namespace UTNApiTalleres.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePersona([FromBody] Persona Persona)
+        public async Task<IActionResult> CreateCliente([FromBody] Cliente cliente)
         {
-            if (Persona == null)
+            if (cliente == null)
                 return BadRequest();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var oCreated = await _personaDao.create(Persona);
+            var oCreated = await _clienteDao.create(cliente);
 
             return Created("Se creo exitosamente.", oCreated);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdatePersona([FromBody] Persona Persona)
-        {  
+        public async Task<IActionResult> UpdateCliente([FromBody] Cliente Cliente)
+        {
 
             try
-            {   
+            {
                 //validamos que exista la persona
-                var persona = await _personaDao.find(Persona.Id);
-                
-                //en caso de no existir retornamos Not Found
-                if (persona == null)
-                    return NotFound("La persona no existe.");
-                
-                //En caso de existir avanzamos con la actualización
-                var regActualizados = await _personaDao.update(Persona);
+                var cliente = await _clienteDao.find(Cliente.Id);
 
-                if (regActualizados)
-                    return Content("Actualización exitosa");
+                //en caso de no existir retornamos Not Found
+                if (cliente == null)
+                    return NotFound("La Cliente no existe.");
+
+                //En caso de existir avanzamos con la actualización
+                var actualizado = await _clienteDao.update(Cliente);
+
+                if (actualizado)
+                    return Content("Actualización exitosa.");
                 else
                     return NoContent();
             }
@@ -96,22 +96,22 @@ namespace UTNApiTalleres.Controllers
                 //log error
                 return StatusCode(500, ex.Message);
             }
-
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePersona(int id)
+        public async Task<IActionResult> DeleteCliente(int id)
         {
+
             try
             {
 
-                var persona = await _personaDao.find(id);
-                
-                if (persona == null)
-                    return NotFound("Persona no encontrada.");
-                
-                await _personaDao.delete(id);
-                
+                var cliente = await _clienteDao.find(id);
+
+                if (cliente == null)
+                    return NotFound("Cliente no encontrada.");
+
+                await _clienteDao.delete(id);
+
                 return NoContent();
 
             }
@@ -120,7 +120,9 @@ namespace UTNApiTalleres.Controllers
                 //log error
                 return StatusCode(500, ex.Message);
             }
+
         }
 
     }
+ 
 }

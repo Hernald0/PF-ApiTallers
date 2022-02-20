@@ -11,43 +11,44 @@ using WebApiTalleres.Models;
 namespace UTNApiTalleres.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]   
-    public class PersonaController : ControllerBase
+    [ApiController]
+    public class TallerController : ControllerBase
     {
+        private readonly ITallerDao _tallerDao;
 
-        private readonly IPersonaDao _personaDao;
-
-        public PersonaController(IPersonaDao PersonaDao)
+        public TallerController(ITallerDao TallerDao)
         {
-            _personaDao = PersonaDao;
+            _tallerDao = TallerDao;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPersona()
+        public async Task<IActionResult> GetAllTaller()
         {
             try
             {
-                var personas = await _personaDao.findAll();
-                return Ok(personas);
+                var talleres = await _tallerDao.findAll();
+                return Ok(talleres);
             }
             catch (Exception ex)
             {
                 //log error
                 return StatusCode(500, ex.Message);
             }
-            //return Ok(await _personaDao.findAll());
+            
         }
 
+
+        // GET api/<TallerController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPersona(int id)
+        public async Task<IActionResult> GetTaller(int id)
         {
             //return Ok( _personaDao.find(id));
             try
             {
-                var persona = await _personaDao.find(id);
-                if (persona == null)
+                var taller = await _tallerDao.find(id);
+                if (taller == null)
                     return NotFound();
-                return Ok(persona);
+                return Ok(taller);
             }
             catch (Exception ex)
             {
@@ -57,34 +58,35 @@ namespace UTNApiTalleres.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePersona([FromBody] Persona Persona)
+        public async Task<IActionResult> CreateTaller([FromBody] Taller Taller)
         {
-            if (Persona == null)
+            if (Taller == null)
                 return BadRequest();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var oCreated = await _personaDao.create(Persona);
+            var oCreated = await _tallerDao.create(Taller);
 
             return Created("Se creo exitosamente.", oCreated);
         }
 
+        // PUT api/<TallerController>/5
         [HttpPut]
-        public async Task<IActionResult> UpdatePersona([FromBody] Persona Persona)
-        {  
+        public async Task<IActionResult> UpdateTaller([FromBody] Taller Taller)
+        {
 
             try
-            {   
+            {
                 //validamos que exista la persona
-                var persona = await _personaDao.find(Persona.Id);
-                
+                var taller = await _tallerDao.find(Taller.Id);
+
                 //en caso de no existir retornamos Not Found
-                if (persona == null)
-                    return NotFound("La persona no existe.");
-                
+                if (taller == null)
+                    return NotFound("El taller no existe.");
+
                 //En caso de existir avanzamos con la actualización
-                var regActualizados = await _personaDao.update(Persona);
+                var regActualizados = await _tallerDao.update(Taller);
 
                 if (regActualizados)
                     return Content("Actualización exitosa");
@@ -99,19 +101,20 @@ namespace UTNApiTalleres.Controllers
 
         }
 
+        // DELETE api/<TallerController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePersona(int id)
+        public async Task<IActionResult> DeleteTaller(int id)
         {
             try
             {
 
-                var persona = await _personaDao.find(id);
-                
+                var persona = await _tallerDao.find(id);
+
                 if (persona == null)
-                    return NotFound("Persona no encontrada.");
-                
-                await _personaDao.delete(id);
-                
+                    return NotFound("Taller no encontrado.");
+
+                await _tallerDao.delete(id);
+
                 return NoContent();
 
             }
@@ -121,6 +124,5 @@ namespace UTNApiTalleres.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
     }
 }

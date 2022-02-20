@@ -14,7 +14,7 @@ namespace WebApiTalleres.Models
 
         public int Id { get; set; }
         public string Nombretaller { get; set; }
-        public string Idpersonatit { get; set; }
+        public Persona PersonaTitular { get; set; }
 
         public virtual ICollection<Empleado> Empleados { get; set; }
     }

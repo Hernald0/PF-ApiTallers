@@ -19,19 +19,19 @@ namespace UTNApiTalleres
 {
     public class Startup
     {
-        public Startup//(IWebHostEnvironment env)
-                      (IConfiguration configuration)
+        public Startup(IWebHostEnvironment env)
+                      //(IConfiguration configuration)
         {
 
-           /* var builder = new ConfigurationBuilder()
+            var builder = new ConfigurationBuilder()
                            .SetBasePath(env.ContentRootPath)
                            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                            .AddEnvironmentVariables();
-           */
+           
 
-            //Configuration = builder.Build();
-            Configuration = configuration;
+            Configuration = builder.Build();
+           // Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -88,6 +88,11 @@ namespace UTNApiTalleres
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HerokuApiDemo v1"));
             }
 
+            app.UseCors(options =>
+                options.WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+            );
 
             app.UseHttpsRedirection();
 

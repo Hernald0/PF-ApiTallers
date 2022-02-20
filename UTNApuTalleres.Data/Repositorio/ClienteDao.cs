@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using UTNApiTalleres.Data;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
 using WebApiTalleres.Models;
+using System.Linq;
+using System.Data;
 
 namespace UTNApiTalleres.Data.Repositorio
 {
@@ -25,10 +27,24 @@ namespace UTNApiTalleres.Data.Repositorio
             return new NpgsqlConnection(this._connectionString.ConnectionString);
         }
 
-        public Task<bool> create(Cliente Cliente)
+        public async Task<bool> create(Cliente Cliente)
         {
-            throw new NotImplementedException();
+            var db = dbConnection();
+
+            var query = @"INSERT INTO  public.""Clientes""( ""PersonaId"", ""TallerId"")
+                        values( @PersonaId, @TallerId )";
+
+            var parameters = new DynamicParameters();
+
+            parameters.Add("PersonaId", Cliente.Persona.Id, DbType.Int32);
+            parameters.Add("TallerId",  Cliente.Taller.Id,  DbType.Int32);
+
+            var result = await db.ExecuteAsync(query, parameters);
+
+            return result > 0;
+
         }
+
 
         public async Task<bool> update(Cliente Cliente)
         {
@@ -37,71 +53,86 @@ namespace UTNApiTalleres.Data.Repositorio
 
         public async Task<bool> delete(int id)
         {
-            throw new NotImplementedException();
+
+            var db = dbConnection();
+
+            var sql_script = @"
+                                DELETE 
+                                FROM  public.""Clientes""
+                                WHERE ""Id"" = @Id  
+                            ";
+
+            var result = await db.ExecuteAsync(sql_script, new { Id = id });
+
+            return result > 0;
         }
 
         public async Task<Cliente> find(int id)
-        {
-            var db = dbConnection();
+        {          
+            var sql_query = @" select  * 
+                                from public.""Clientes"" as a 
+                                inner join
+                                     public.""Personas"" as b
+                                      on(a.""Id"" = b.""Id"")
+                                inner join 
+                                     public.""Talleres"" as c
+                                      on(a.""TallerId"" = c.""Id"")
+                                where b.""Id"" = @Id";      
 
-            var command = @" select id, nombre
-                             from Cliente
-                             where id = @Id ";
-             
-            return await db.QueryFirstOrDefaultAsync<Cliente>(command, new { Id = id }); 
+            using (var connection = dbConnection())
+            {      
 
-            //Cliente oCliente = await db.QueryFirstOrDefaultAsync<Cliente>(command, new { Id = id });
+                var oCliente =  await connection.QueryAsync<Cliente, Persona, Taller, Cliente>(                             
+                             sql_query,                             
+                             (cliente, persona, taller) =>
+                             {                                 
+                                 cliente.Persona = persona;
+                                 cliente.Taller = taller;
+                                 return cliente;
+                             },
+                             new { Id = id }
+                  
+                         )
+                   ;
+                ;        
 
-            //return Helper.buscarDatos(oCliente);
+                return oCliente.FirstOrDefault();
+            }
         }
 
         public async Task<IEnumerable<Cliente>> findAll()
         {
-            var db = dbConnection();
+            var sql_query = @" select  * 
+                                from public.""Clientes"" as a 
+                                inner join
+                                     public.""Personas"" as b
+                                      on(a.""Id"" = b.""Id"")
+                                inner join 
+                                     public.""Talleres"" as c
+                                      on(a.""TallerId"" = c.""Id"")
+                              ";
+            
 
-            var command = @" select ""Id"", ""Nombre""
-                             from public.""Clientes""
-                            ";
+            using (var connection = dbConnection())
+            {                
 
-            return await db.QueryAsync<Cliente>(command, new { });
+                var oCliente = await connection.QueryAsync<Cliente, Persona, Taller, Cliente>(
+
+                             sql_query,
+                             (cliente, persona, taller) =>
+                             {
+                                 cliente.Taller = taller;
+                                 cliente.Persona = persona;
+                                 
+                                 return cliente;
+                             }                         
+                         )
+                   ;
+                ;
+
+                return oCliente;
+            }
         }
     }
 }
 
-/*
-public class Helper
-{
-
-    private PostgresqlConfiguration _connectionString;
-
-
-    public HelperDao(PostgresqlConfiguration connectionString)
-    {
-        this._connectionString = connectionString;
-    }
-
-    protected NpgsqlConnection dbConnection()
-    {
-        return new NpgsqlConnection(this._connectionString.ConnectionString);
-    }
-
-    public static Object buscarDatos(Object oModelo)
-    {
-
-        var db = dbConnection();
-
-        switch (oModelo.ToString())
-        {
-            case "Personas":
-                
-
-                var command = @" select ""Id"", ""Nombre""
-                             from public.""Personas""
-                             where Id = ";
-
-                return await db.QueryAsync<Persona>(command, new { });
-                break;
-
-        }
-    }
-}*/

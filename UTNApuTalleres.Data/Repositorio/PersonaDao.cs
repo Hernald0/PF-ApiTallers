@@ -97,7 +97,7 @@ namespace UTNApiTalleres.Data.Repositorio
             
             var parameters = new DynamicParameters();
             
-            parameters.Add("Id", persona.Id, DbType.Int32);
+            //parameters.Add("Id", persona.Id, DbType.Int32);
             parameters.Add("Nombre", persona.Nombre, DbType.String);
             parameters.Add("RazonSocial", persona.RazonSocial, DbType.String);
             parameters.Add("Apellido", persona.Apellido, DbType.String);

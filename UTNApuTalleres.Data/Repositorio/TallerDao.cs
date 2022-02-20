@@ -2,6 +2,7 @@
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
@@ -23,9 +24,22 @@ namespace UTNApiTalleres.Data.Repositorio
         {
             return new NpgsqlConnection(this._connectionString.ConnectionString);
         }
-        public Task<bool> create(Taller Taller)
+        public async Task<bool> create(Taller taller)
         {
-            throw new NotImplementedException();
+            var db = dbConnection();
+
+            var sql_insert = @"
+                            INSERT INTO public.""Talleres""(""NombreTaller"", ""IdPertonatit"")
+                            VALUES ( @NombreTaller, @IdPersona)
+                            ";
+
+            var result = await db.ExecuteAsync(sql_insert, new
+            {
+                NombreTaller = taller.Nombretaller,
+                IdPersona = taller.PersonaTitular.Id
+            });
+
+            return result > 0;
         }
 
         public Task<bool> delete(int id)
@@ -37,32 +51,62 @@ namespace UTNApiTalleres.Data.Repositorio
         {
             var db = dbConnection();
 
-            var command = @"
-                            SELECT P.*,
-	                               T.*
+            var sql_query = @"
+                            SELECT *
                             FROM ""Personas"" as p
                             inner join ""Talleres"" as t
-
                                 on(p.""Id"" = t.""ReferenteId"");
                             WHERE  t.""Id""= @Id ";
 
-            Taller oTaller = new Taller();
-            //Taller oTaller = await db.QueryAsync<Taller, Persona, Taller >(command, );
-            /*
-            Taller taller = db.QueryAsync<Persona, Taller, Persona>
-                            ( command,
-                            (Persona, Taller) );
-            Taller taller = repo.QueryMultiple<Table1, Table2, Table3>(sql,
-                                    new { p1 = 1, splitOn = "Table1ID,Table2ID,Table3ID" }).ToList();
-            */
-            return oTaller;
+            using (var connection = dbConnection())
+            {
+
+                var oTaller = await connection.QueryAsync<Taller, Persona, Taller>(
+                             sql_query,
+                             (taller,persona) =>
+                             {
+                                 taller.PersonaTitular = persona;
+                                
+                                 return taller;
+                             },
+                             new { Id = id }
+
+                         )
+                   ;
+                
+                return oTaller.FirstOrDefault();
+            }
 
 
         }
 
-        public Task<IEnumerable<Taller>> findAll()
+        public async Task<IEnumerable<Taller>> findAll()
         {
-            throw new NotImplementedException();
+            var db = dbConnection();
+
+            var sql_query = @"
+                            SELECT *
+                            FROM ""Personas"" as p
+                            inner join ""Talleres"" as t
+                                on(p.""Id"" = t.""ReferenteId"");
+                             ";
+
+            using (var connection = dbConnection())
+            {
+
+                var oTaller = await connection.QueryAsync<Taller, Persona, Taller>(
+                             sql_query,
+                             (taller, persona) =>
+                             {
+                                 taller.PersonaTitular = persona;
+
+                                 return taller;
+                             } 
+                         )
+                   ;
+
+                return oTaller;
+            }
         }
 
         public Task<bool> update(Taller Taller)
