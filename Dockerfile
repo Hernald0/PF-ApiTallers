@@ -5,8 +5,8 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
 WORKDIR /src
-COPY ["UTNApiTalleres/UTNApiTalleres.csproj", "UTNApiTalleres/"]
-RUN dotnet restore "UTNApiTalleres/UTNApiTalleres.csproj"
+COPY ["UTNApiTalleres.csproj", "UTNApiTalleres/"]
+RUN dotnet restore "UTNApiTalleres.csproj"
 COPY . .
 WORKDIR "/src/UTNApiTalleres"
 RUN dotnet build "UTNApiTalleres.csproj" -c Release -o /app/build
