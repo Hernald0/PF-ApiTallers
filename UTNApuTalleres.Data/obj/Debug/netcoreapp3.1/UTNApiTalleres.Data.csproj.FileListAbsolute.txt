@@ -11,3 +11,15 @@ C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApuTalleres.Data\obj\Debug\netco
 C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.csproj.CopyComplete
 C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.dll
 C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.pdb
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\bin\Debug\netcoreapp3.1\UTNApiTalleres.Data.deps.json
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\bin\Debug\netcoreapp3.1\UTNApiTalleres.Data.dll
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\bin\Debug\netcoreapp3.1\UTNApiTalleres.Data.pdb
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.dll
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.pdb
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.csprojAssemblyReference.cache
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.AssemblyInfoInputs.cache
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.AssemblyInfo.cs
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.csproj.CoreCompileInputs.cache
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.csproj.CopyComplete
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.dll
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.pdb

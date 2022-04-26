@@ -8,3 +8,12 @@ C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\obj\Debug\netc
 C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.csproj.CoreCompileInputs.cache
 C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.dll
 C:\Users\HCelaya\source\repos\UTNApiTalleres\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.pdb
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.deps.json
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.dll
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.pdb
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.csprojAssemblyReference.cache
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.AssemblyInfoInputs.cache
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.AssemblyInfo.cs
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.csproj.CoreCompileInputs.cache
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.dll
+D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.pdb

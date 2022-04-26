@@ -48,23 +48,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\HCelaya\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\Hernaldo\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\HCelaya\\source\\repos\\UTNApiTalleres\\UTNApiTalleres.Model\\UTNApiTalleres.Model.csproj",
+      "projectUniqueName": "D:\\Documents\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.Model\\UTNApiTalleres.Model.csproj",
       "projectName": "UTNApiTalleres.Model",
-      "projectPath": "C:\\Users\\HCelaya\\source\\repos\\UTNApiTalleres\\UTNApiTalleres.Model\\UTNApiTalleres.Model.csproj",
-      "packagesPath": "C:\\Users\\HCelaya\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\HCelaya\\source\\repos\\UTNApiTalleres\\UTNApiTalleres.Model\\obj\\",
+      "projectPath": "D:\\Documents\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.Model\\UTNApiTalleres.Model.csproj",
+      "packagesPath": "C:\\Users\\Hernaldo\\.nuget\\packages\\",
+      "outputPath": "D:\\Documents\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.Model\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+        "C:\\Microsoft\\Xamarin\\NuGet\\",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\HCelaya\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Hernaldo\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
@@ -77,7 +79,6 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
           "projectReferences": {}
         }
       },
@@ -89,7 +90,6 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
-        "targetAlias": "netcoreapp3.1",
         "dependencies": {
           "Newtonsoft.Json": {
             "target": "Package",
@@ -111,7 +111,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.418\\RuntimeIdentifierGraph.json"
       }
     }
   }

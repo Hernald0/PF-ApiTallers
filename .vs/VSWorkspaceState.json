@@ -1,12 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\Controllers",
-    "\\UTNApiTalleres",
-    "\\UTNApiTalleres.Model",
-    "\\UTNApuTalleres.Data",
-    "\\UTNApuTalleres.Data\\Repositorio"
+    ""
   ],
-  "SelectedNode": "\\UTNApiTalleres",
+  "SelectedNode": "\\UTNApiTalleres.Model",
   "PreviewInSolutionExplorer": false
 }
