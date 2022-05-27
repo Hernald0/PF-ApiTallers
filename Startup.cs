@@ -57,7 +57,7 @@ namespace UTNApiTalleres
             services.AddScoped<IPersonaDao, PersonaDao>();
             services.AddScoped<ITallerDao, TallerDao>();
             services.AddScoped<IGeneroDao, GeneroDao>();
-            services.AddScoped<IEstadoCivilDao, EstadocivilDao>();
+            services.AddScoped<IEstadoCivilDao, EstadoCivilDao>();
             services.AddScoped<ITipoidentificadorDao, TipoidentificadorDao>();
             services.AddScoped<IPaisDao, PaisDao>();
 

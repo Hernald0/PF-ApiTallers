@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WebApiTalleres.Models
 {
-    public partial class Tipoidentificador
+    public partial class TipoIdentificador
     {
         public int Id { get; set; }
         public string Identificador { get; set; }

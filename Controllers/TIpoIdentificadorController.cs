@@ -63,7 +63,7 @@ namespace UTNApiTalleres.Controllers
 
         // POST api/<TIpoIdentificadorController>
         [HttpPost]
-        public async Task<IActionResult> CreateTipoIdentificador([FromBody] Tipoidentificador tipoidentificador)
+        public async Task<IActionResult> CreateTipoIdentificador([FromBody] TipoIdentificador tipoidentificador)
         {
             if (tipoidentificador == null)
                 return BadRequest();
@@ -78,7 +78,7 @@ namespace UTNApiTalleres.Controllers
 
         // PUT api/<TIpoIdentificadorController>/5
         [HttpPut]
-        public async Task<IActionResult> UpdateEstadoCivil([FromBody] Tipoidentificador tipoidentificador)
+        public async Task<IActionResult> UpdateEstadoCivil([FromBody] TipoIdentificador tipoidentificador)
         {
 
             try

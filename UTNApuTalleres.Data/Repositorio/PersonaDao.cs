@@ -3,6 +3,7 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,12 +50,12 @@ namespace UTNApiTalleres.Data.Repositorio
                                                                     Telcelular = persona.Telcelular,
                                                                     Telfijo = persona.Telfijo,
                                                                     Email = persona.Email,
-                                                                    TipoIdentificadorId = persona.IdTipoIdentificador,
+                                                                    TipoIdentificadorId = persona.TipoIdentificador.Id,
                                                                     NroIdentificacion = persona.NroIdentificacion,
                                                                     TipoPersona = persona.TipoPersona,
-                                                                    GeneroId = persona.IdGenero,
+                                                                    GeneroId = persona.Genero.Id,
                                                                     Ocupacion = persona.Ocupacion ,
-                                                                    IdEstadoCivil =   persona.IdEstadoCivil,
+                                                                    IdEstadoCivil =   persona.EstadoCivil.Id,
                                                                     FechaAlta =  persona.FechaAlta,
                                                                     UsrAltaId = persona.UsrAlta,
                                                                     FechaBaja = persona.FechaBaja,
@@ -97,7 +98,7 @@ namespace UTNApiTalleres.Data.Repositorio
             
             var parameters = new DynamicParameters();
             
-            //parameters.Add("Id", persona.Id, DbType.Int32);
+            parameters.Add("Id", persona.Id, DbType.Int32);
             parameters.Add("Nombre", persona.Nombre, DbType.String);
             parameters.Add("RazonSocial", persona.RazonSocial, DbType.String);
             parameters.Add("Apellido", persona.Apellido, DbType.String);
@@ -111,12 +112,21 @@ namespace UTNApiTalleres.Data.Repositorio
             parameters.Add("Telcelular", persona.Telcelular, DbType.String);
             parameters.Add("Telfijo", persona.Telfijo, DbType.String);
             parameters.Add("Email", persona.Email, DbType.String);
-            parameters.Add("IdTipoIdentificador", persona.IdTipoIdentificador, DbType.Int32);
+            //var tipoIdentificador = (persona.Tipoidentificador == null ? SqlInt32.Null : persona.Tipoidentificador.Id);
+            parameters.Add("IdTipoIdentificador", 
+                        persona.TipoIdentificador.Id, 
+                        DbType.Int32 );
             parameters.Add("NroIdentificacion", persona.NroIdentificacion, DbType.Int32);
             parameters.Add("TipoPersona", persona.TipoPersona, DbType.String);
-            parameters.Add("IdGenero", persona.IdGenero, DbType.Int32);
+            //var genero = (persona.Genero.Id null ? SqlInt32.Null : persona.Genero.Id);
+            parameters.Add("IdGenero", 
+                         persona.Genero.Id, 
+                        DbType.Int32);
             parameters.Add("Ocupacion", persona.Ocupacion, DbType.String);
-            parameters.Add("IdEstadoCivil", persona.IdEstadoCivil, DbType.Int32);
+            //var EstadoCivil = (persona.EstadoCivil.Id null ? SqlInt32.Null : persona.EstadoCivil.Id);
+            parameters.Add("IdEstadoCivil", 
+                        persona.EstadoCivil.Id, 
+                        DbType.Int32);
             //parameters.Add("FechaAlta", persona.FechaAlta, DbType.DateTime);
             //parameters.Add("UsrAlta", persona.UsrAlta, DbType.String);
             //parameters.Add("FechaBaja", persona.FechaBaja, DbType.DateTime);
@@ -124,7 +134,7 @@ namespace UTNApiTalleres.Data.Repositorio
             parameters.Add("FechaMod", DateTime.Now, DbType.DateTime);
             parameters.Add("UsrMod", "HCELAYA", DbType.String);
             
-            using (var connection = dbConnection())
+             using (var connection = dbConnection())
             {
                 var result =  await connection.ExecuteAsync(query, parameters);
 
@@ -187,6 +197,111 @@ namespace UTNApiTalleres.Data.Repositorio
             return result > 0;
         }
 
+        public async Task<Persona> find2(int id)
+        {
+            /*
+            var sql_query1 = @"SELECT     a.""Id"", a.""Id"" as idpe,a.""Nombre"",a.""RazonSocial"",a.""Apellido"",a.""FecNacimiento"",a.""IdLocalidad"",a.""Barrio"",
+                                         a.""Direccion"",a.""NroDireccion"",a.""Dpto"",a.""Piso"",a.""Telcelular"",a.""Telfijo"",a.""Email"",
+                                         a.""NroIdentificacion"",a.""TipoPersona"",a.""Ocupacion"",a.""FechaAlta"",a.""UsrAlta"",
+                                         a.""FechaBaja"",a.""UsrBaja"",a.""FechaMod"",a.""UsrMod"",
+                                         b.""Id"",  b.""Id"" as idec,b.""Descripcion"",b.""FechaAlta"",b.""FechaBaja"",b.""UsuarioAlta"",b.""UsuarioBaja"",
+                                         c.""Id"",  c.""Id"" as idti,c.""Identificador"",c.""DescripcionIdentificador"",c.""FechaAlta"",c.""UsuarioAlta"",c.""FechaBaja"",c.""UsuarioBaja"",
+                                         d.""Id"",  d.""Id"" as idge,d.""Descripcion"",d.""FechaAlta"",d.""UsuarioAlta"",d.""FechaBaja"",d.""UsuarioBaja""
+                                FROM public.""Personas"" as a 
+	                                left join
+		                                public.""EstadoCiviles"" as b
+	                                on b.""Id"" = a.""IdEstadoCivil"" 
+	                                left join
+		                                public.""Tipoidentificadores"" as c    
+	                                on c.""Id"" = a.""IdTipoIdentificador""  
+	                                left join
+		                                public.""Generos"" as d    
+	                                on d.""Id"" = a.""IdGenero"" 
+                                WHERE a.""Id"" = @Id";*/
+           
+            var sql_query  = @"SELECT     a.""Id"" as idpe, a.*, 
+		                                  b.""Id"" as idec, b.*, 
+		                                  c.""Id"" as idti, c.*, 
+                                          d.""Id"" as idge, d.* 
+                                 FROM public.""Personas"" as a 
+	                                left join
+		                                public.""Estadociviles"" as b
+	                                on b.""Id"" = a.""IdEstadoCivil"" 
+	                                left join
+		                                public.""Tipoidentificadores"" as c    
+	                                on c.""Id"" = a.""IdTipoIdentificador""  
+	                                left join
+		                                public.""Generos"" as d    
+	                                on d.""Id"" = a.""IdGenero"" 
+                                WHERE a.""Id"" = @Id";
+            /*
+            var sql = @" SELECT ""Id"",   
+		                                    ""Nombre"", 
+		                                    ""RazonSocial"", 
+		                                    ""Apellido"", 
+		                                    ""FecNacimiento"", 
+		                                    ""IdLocalidad"", 
+		                                    ""Barrio"", 
+		                                    ""Direccion"", 
+		                                    ""NroDireccion"", 
+		                                    ""Dpto"", 
+		                                    ""Piso"", 
+		                                    ""Telcelular"", 
+		                                    ""Telfijo"", 
+		                                    ""Email"", 
+		                                    ""IdTipoIdentificador"", 
+		                                    ""NroIdentificacion"", 
+		                                    ""TipoPersona"", 
+		                                    ""IdGenero"", 
+		                                    ""Ocupacion"", 
+		                                    ""IdEstadoCivil"", 
+		                                    ""FechaAlta"", 
+		                                    ""UsrAlta"", 
+		                                    ""FechaBaja"", 
+		                                    ""UsrBaja"", 
+		                                    ""FechaMod"", 
+		                                    ""UsrMod""
+		                         FROM public.""Personas"" as a left join public.""EstadoCiviles"" as b 
+                                        on a.""IdEstadoCivil"" = b.""Id""
+                                      public.""Tipoidentificadores"" as c    
+                                        on a.""IdTipoIdentificador"" = c.""Id""
+		                         WHERE  ""Id"" = @Id
+                                 ORDER BY ""Id"" desc";*/
+
+            using (var connection = dbConnection())
+            {
+
+                /*
+                 Persona oPersona = (Persona) await connection.QueryAsync<Persona, EstadoCivil, Persona>(sql_query,
+                                                map: (persona, EstadoCivil) =>
+                                                {
+                                                    persona.EstadoCivil  = (EstadoCivil) EstadoCivil ;
+                                                    return persona;
+                                                },
+                                                param: new { id },
+                                                splitOn: "IdEstadoCivil");
+                */
+                var oPersona = await connection.QueryAsync<Persona, EstadoCivil, TipoIdentificador, Genero, Persona>(sql_query,
+                                               map: (persona, EstadoCivil, tipoIdentificador, genero) =>
+                                               {
+                                                   if (EstadoCivil.Id > 0)
+                                                       persona.EstadoCivil = (EstadoCivil)EstadoCivil;
+
+                                                   if (tipoIdentificador.Id > 0)
+                                                       persona.TipoIdentificador = (TipoIdentificador)tipoIdentificador;
+
+                                                   if (genero.Id > 0)
+                                                       persona.Genero = (Genero)genero;  
+
+                                                   return persona;
+                                               }, 
+                                               param: new { id },
+                                               splitOn: "idpe,idec,idti,idge").ConfigureAwait(false);
+                return (Persona) oPersona.FirstOrDefault();
+            }
+
+        }
+
         public async Task<Persona> find(int id)
         {
             /*
@@ -229,7 +344,8 @@ namespace UTNApiTalleres.Data.Repositorio
 		                                    ""FechaMod"", 
 		                                    ""UsrMod""
 		                         FROM public.""Personas""
-		                         WHERE  ""Id"" = @Id";
+		                         WHERE  ""Id"" = @Id
+                                 ORDER BY ""Id"" desc";
 
             using (var connection = dbConnection())
             {
@@ -238,92 +354,12 @@ namespace UTNApiTalleres.Data.Repositorio
                 return oPersona;
                 
             }
-            /*
-            await db.OpenAsync();
-            
-            NpgsqlCommand command = new NpgsqlCommand();
-            
-            command.Connection = db;
-            command.CommandType = CommandType.Text;
-            command.CommandText = @" SELECT ""Id"",   
-		                                    ""Nombre"", 
-		                                    ""RazonSocial"", 
-		                                    ""Apellido"", 
-		                                    ""FecNacimiento"", 
-		                                    ""IdLocalidad"", 
-		                                    ""Barrio"", 
-		                                    ""Direccion"", 
-		                                    ""NroDireccion"", 
-		                                    ""Dpto"", 
-		                                    ""Piso"", 
-		                                    ""Telcelular"", 
-		                                    ""Telfijo"", 
-		                                    ""Email"", 
-		                                    ""IdTipoIdentificador"", 
-		                                    ""NroIdentificacion"", 
-		                                    ""TipoPersona"", 
-		                                    ""IdGenero"", 
-		                                    ""Ocupacion"", 
-		                                    ""IdEstadoCivil"", 
-		                                    ""FechaAlta"", 
-		                                    ""UsrAlta"", 
-		                                    ""FechaBaja"", 
-		                                    ""UsrBaja"", 
-		                                    ""FechaMod"", 
-		                                    ""UsrMod""
-		                         FROM public.""Personas""
-		                         WHERE  ""Id"" = @Id";
-
-            command.Parameters.AddWithValue("Id", id);
-            */
-
-
-            //NpgsqlDataReader dr = (NpgsqlDataReader) await command.ExecuteReaderAsync();
-
-            //Persona oPersona = new Persona();
-
-            /*
-            while (dr.Read())
-            {
-                oPersona.Apellido = dr["Apellido"].ToString();
-                oPersona.Nombre = dr["Nombre"].ToString();
-                oPersona.RazonSocial = dr["RazonSocial"].ToString();
-                oPersona.Apellido = dr["Apellido"].ToString();
-                oPersona.FecNacimiento = dr["FecNacimiento"].ToString();
-                oPersona.LocalidadId = dr["LocalidadId"].ToString();
-                oPersona.Barrio = dr["Barrio"].ToString();
-                oPersona.Direccion = dr["Direccion"].ToString();
-                //oPersona.NroDireccion = dr["NroDireccion"].ToString();
-                oPersona.Dpto = dr["Dpto"].ToString();
-                //oPersona.Piso = dr["Piso"].ToString();
-                oPersona.Telcelular = dr["Telcelular"].ToString();
-                oPersona.Telfijo = dr["Telfijo"].ToString();
-                oPersona.Email = dr["Email"].ToString();
-                //oPersona.TipoIdentificadorId = dr["TipoIdentificadorId"].ToString();
-                //oPersona.NroIdentificacion = dr["NroIdentificacion"].ToString();
-                oPersona.TipoPersona = dr["TipoPersona"].ToString();
-                //oPersona.GeneroId = dr["GeneroId"].ToString();
-                oPersona.Ocupacion = dr["Ocupacion"].ToString();
-                //oPersona.EstadoCivilId = dr["EstadoCivilId"].ToString();
-                oPersona.FechaAlta = dr["FechaAlta"].ToString();
-                oPersona.UsrAltaId = dr["UsrAltaId"].ToString();
-                oPersona.FechaBaja = dr["FechaBaja"].ToString();
-                oPersona.UsrBajaId = dr["UsrBajaId"].ToString();
-                oPersona.FechaMod = dr["FechaMod"].ToString();
-                oPersona.UsrModId = dr["UsrModId"].ToString();
-                
-
-            }*/
-
-            //await db.CloseAsync();
-
-
-            //return await db.QueryFirstOrDefaultAsync<Persona>(command, new { Id = id });
+           
         }
 
         public async Task<IEnumerable<Persona>> findAll()
         {
-
+            /*
             var query = @" SELECT ""Id"",   
 		                            ""Nombre"", 
 		                            ""RazonSocial"", 
@@ -351,11 +387,43 @@ namespace UTNApiTalleres.Data.Repositorio
 		                            ""FechaMod"", 
 		                            ""UsrMod""
 		                    FROM public.""Personas""";
+            */
+
+            var sql_query = @"SELECT     a.""Id"" as idpe, a.*, 
+		                                  b.""Id"" as idec, b.*, 
+		                                  c.""Id"" as idti, c.*, 
+                                          d.""Id"" as idge, d.* 
+                                 FROM public.""Personas"" as a 
+	                                left join
+		                                public.""Estadociviles"" as b
+	                                on b.""Id"" = a.""IdEstadoCivil"" 
+	                                left join
+		                                public.""Tipoidentificadores"" as c    
+	                                on c.""Id"" = a.""IdTipoIdentificador""  
+	                                left join
+		                                public.""Generos"" as d    
+	                                on d.""Id"" = a.""IdGenero"" ";
 
             using (var db = dbConnection())
             {
-                var oPersonas = await db.QueryAsync<Persona>(query);
-                return oPersonas.ToList();
+                //var oPersonas = await db.QueryAsync<Persona>(query);
+                //return oPersonas.ToList();
+                var oPersona = await db.QueryAsync<Persona, EstadoCivil, TipoIdentificador, Genero, Persona>(sql_query,
+                                               map: (persona, EstadoCivil, tipoIdentificador, genero) =>
+                                               {
+                                                   if (EstadoCivil.Id > 0)
+                                                       persona.EstadoCivil = (EstadoCivil)EstadoCivil;
+
+                                                   if (tipoIdentificador.Id > 0)
+                                                       persona.TipoIdentificador = (TipoIdentificador)tipoIdentificador;
+
+                                                   if (genero.Id > 0)
+                                                       persona.Genero = (Genero)genero;
+
+                                                   return persona;
+                                               },                                             
+                                               splitOn: "idpe,idec,idti,idge").ConfigureAwait(false);
+                return oPersona;
             }
 
             /*var db = dbConnection();            

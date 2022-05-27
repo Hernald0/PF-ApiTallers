@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
 using WebApiTalleres.Models;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -44,7 +46,7 @@ namespace UTNApiTalleres.Controllers
             //return Ok( _personaDao.find(id));
             try
             {
-                var persona = await _personaDao.find(id);
+                var persona = await _personaDao.find2(id);
                 if (persona == null)
                     return NotFound();
                 return Ok(persona);
@@ -87,7 +89,10 @@ namespace UTNApiTalleres.Controllers
                 var regActualizados = await _personaDao.update(Persona);
 
                 if (regActualizados)
-                    return Content("Actualización exitosa");
+                    // String json = JsonConvert.SerializeObject("Actualización exitosa");
+                    //.parse("Actualización exitosa");
+                    return Ok(new { response = "Actualización exitosa" });
+                //return Content("Actualización exitosa", "application/json");
                 else
                     return NoContent();
             }

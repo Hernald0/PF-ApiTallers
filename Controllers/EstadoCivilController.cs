@@ -15,11 +15,11 @@ namespace UTNApiTalleres.Controllers
     public class EstadoCivilController : ControllerBase
     {
 
-        private readonly IEstadoCivilDao _estadocivilDao;
+        private readonly IEstadoCivilDao _EstadoCivilDao;
 
-        public EstadoCivilController(IEstadoCivilDao estadocivilDao)
+        public EstadoCivilController(IEstadoCivilDao EstadoCivilDao)
         {
-            _estadocivilDao = estadocivilDao;
+            _EstadoCivilDao = EstadoCivilDao;
         }
 
 
@@ -28,7 +28,7 @@ namespace UTNApiTalleres.Controllers
         {
             try
             {
-                var estadosciviles = await _estadocivilDao.findAll();
+                var estadosciviles = await _EstadoCivilDao.findAll();
 
                 return Ok(estadosciviles);
 
@@ -48,12 +48,12 @@ namespace UTNApiTalleres.Controllers
         {
             try
             {
-                var estadocivil = await _estadocivilDao.find(id);
+                var EstadoCivil = await _EstadoCivilDao.find(id);
                 
-                if (estadocivil == null)
+                if (EstadoCivil == null)
                     return NotFound();
                 
-                return Ok(estadocivil);
+                return Ok(EstadoCivil);
             }
             catch (Exception ex)
             {
@@ -64,35 +64,35 @@ namespace UTNApiTalleres.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public async Task<IActionResult> CreateEstadoCivil([FromBody] Estadocivil estadocivil)
+        public async Task<IActionResult> CreateEstadoCivil([FromBody] EstadoCivil EstadoCivil)
         {
-            if (estadocivil == null)
+            if (EstadoCivil == null)
                 return BadRequest();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var oCreated = await _estadocivilDao.create(estadocivil);
+            var oCreated = await _EstadoCivilDao.create(EstadoCivil);
 
             return Created("Se creo exitosamente.", oCreated);
         }
 
         // PUT api/<ValuesController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEstadoCivil([FromBody] Estadocivil estadoCivil)
+        public async Task<IActionResult> UpdateEstadoCivil([FromBody] EstadoCivil EstadoCivil)
         {
 
             try
             {
                 //validamos que exista la persona
-                var oEstadoCivil = await _estadocivilDao.find(estadoCivil.Id);
+                var oEstadoCivil = await _EstadoCivilDao.find(EstadoCivil.Id);
 
                 //en caso de no existir retornamos Not Found
                 if (oEstadoCivil == null)
                     return NotFound("El Estado Civil no existe.");
 
                 //En caso de existir avanzamos con la actualización
-                var actualizado = await _estadocivilDao.update(estadoCivil);
+                var actualizado = await _EstadoCivilDao.update(EstadoCivil);
 
                 if (actualizado)
                     return Content("Actualización exitosa.");
@@ -114,12 +114,12 @@ namespace UTNApiTalleres.Controllers
             try
             {
 
-                var estadocivil = await _estadocivilDao.find(id);
+                var EstadoCivil = await _EstadoCivilDao.find(id);
 
-                if (estadocivil == null)
+                if (EstadoCivil == null)
                     return NotFound("Estado Civil no encontrado.");
 
-                await _estadocivilDao.delete(id);
+                await _EstadoCivilDao.delete(id);
 
                 return NoContent();
 

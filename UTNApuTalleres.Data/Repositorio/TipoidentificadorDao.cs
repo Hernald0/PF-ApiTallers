@@ -27,7 +27,7 @@ namespace UTNApiTalleres.Data.Repositorio
             return new NpgsqlConnection(this._connectionString.ConnectionString);
         }
 
-        public async Task<bool> create(Tipoidentificador tipoidentificador)
+        public async Task<bool> create(TipoIdentificador tipoidentificador)
         {
             var sql_insert = @" INSERT INTO public.""Tipoidentificadores""(
 	                        ""Identificador"", ""DescripcionIdentificador"", ""FechaAlta"", ""UsuarioAlta"")
@@ -50,7 +50,7 @@ namespace UTNApiTalleres.Data.Repositorio
             }
         }
 
-        public async Task<bool> update(Tipoidentificador tipoidentificador)
+        public async Task<bool> update(TipoIdentificador tipoidentificador)
         {
             var query = @"UPDATE public.""Tipoidentificadores""                            
                           SET  
@@ -86,7 +86,7 @@ namespace UTNApiTalleres.Data.Repositorio
             return result > 0;
         }
 
-        public async Task<Tipoidentificador> find(int id)
+        public async Task<TipoIdentificador> find(int id)
         {
             var db = dbConnection();
 
@@ -94,17 +94,17 @@ namespace UTNApiTalleres.Data.Repositorio
                              from public.""Tipoidentificadores""
                              where ""Id"" = @Id ";
 
-            return await db.QueryFirstOrDefaultAsync<Tipoidentificador>(command, new { Id = id });
+            return await db.QueryFirstOrDefaultAsync<TipoIdentificador>(command, new { Id = id });
         }
 
-        public async Task<IEnumerable<Tipoidentificador>> findAll()
+        public async Task<IEnumerable<TipoIdentificador>> findAll()
         {
             var query = @"  select ""Id"", ""Identificador"", ""DescripcionIdentificador"", ""FechaAlta"", ""UsuarioAlta"", ""FechaBaja"", ""UsuarioBaja""
                              from public.""Tipoidentificadores""
                             ";
             using (var db = dbConnection())
             {
-                var oPaises = await db.QueryAsync<Tipoidentificador>(query);
+                var oPaises = await db.QueryAsync<TipoIdentificador>(query);
 
                 return oPaises.ToList();
 

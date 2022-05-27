@@ -11,13 +11,13 @@ using WebApiTalleres.Models;
 
 namespace UTNApiTalleres.Data.Repositorio
 {
-    public class EstadocivilDao : IEstadoCivilDao
+    public class EstadoCivilDao : IEstadoCivilDao
     {
 
         private PostgresqlConfiguration _connectionString;
 
 
-        public EstadocivilDao(PostgresqlConfiguration connectionString)
+        public EstadoCivilDao(PostgresqlConfiguration connectionString)
         {
             this._connectionString = connectionString;
         }
@@ -27,7 +27,7 @@ namespace UTNApiTalleres.Data.Repositorio
             return new NpgsqlConnection(this._connectionString.ConnectionString);
         }
 
-        public async Task<bool> create(Estadocivil estadocivil)
+        public async Task<bool> create(EstadoCivil EstadoCivil)
         {
             var sql_insert = @" INSERT INTO public.""Estadociviles""(""Descripcion"", ""FechaAlta"", ""UsuarioAlta"")
 	                            VALUES ( @Descripcion, @FechaAlta, @UsuarioAlta);
@@ -36,7 +36,7 @@ namespace UTNApiTalleres.Data.Repositorio
             var parameters = new DynamicParameters();
 
             
-            parameters.Add("Descripcion", estadocivil.Descripcion, DbType.String);
+            parameters.Add("Descripcion", EstadoCivil.Descripcion, DbType.String);
             parameters.Add("FechaAlta", DateTime.Now, DbType.DateTime);
             parameters.Add("UsuarioAlta", "HCELAYA", DbType.String);
 
@@ -49,7 +49,7 @@ namespace UTNApiTalleres.Data.Repositorio
             }
         }
 
-        public async Task<bool> update(Estadocivil estadocivil)
+        public async Task<bool> update(EstadoCivil EstadoCivil)
         {
             var query = @"UPDATE public.""Estadociviles""                            
                           SET  
@@ -58,8 +58,8 @@ namespace UTNApiTalleres.Data.Repositorio
 
             var parameters = new DynamicParameters();
 
-            parameters.Add("Id", estadocivil.Id, DbType.Int32);
-            parameters.Add("Descripcion", estadocivil.Descripcion, DbType.String);
+            parameters.Add("Id", EstadoCivil.Id, DbType.Int32);
+            parameters.Add("Descripcion", EstadoCivil.Descripcion, DbType.String);
 
             using (var connection = dbConnection())
             {
@@ -84,7 +84,7 @@ namespace UTNApiTalleres.Data.Repositorio
             return result > 0;
         }
 
-        public async Task<Estadocivil> find(int id)
+        public async Task<EstadoCivil> find(int id)
         {
             var db = dbConnection();
 
@@ -92,17 +92,17 @@ namespace UTNApiTalleres.Data.Repositorio
                              from public.""Estadociviles""
                              where ""Id"" = @Id ";
 
-            return await db.QueryFirstOrDefaultAsync<Estadocivil>(command, new { Id = id });
+            return await db.QueryFirstOrDefaultAsync<EstadoCivil>(command, new { Id = id });
         }
 
-        public async Task<IEnumerable<Estadocivil>> findAll()
+        public async Task<IEnumerable<EstadoCivil>> findAll()
         {
             var query = @" select ""Id"", ""Descripcion"", ""FechaAlta"", ""UsuarioAlta"", ""FechaBaja"", ""UsuarioBaja""
                              from public.""Estadociviles""
                             ";
             using (var db = dbConnection())
             {
-                var oEstadosCiviles = await db.QueryAsync<Estadocivil>(query);
+                var oEstadosCiviles = await db.QueryAsync<EstadoCivil>(query);
 
                 return oEstadosCiviles.ToList();
 

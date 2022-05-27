@@ -21,12 +21,14 @@ namespace WebApiTalleres.Models
         public string Telcelular { get; set; }
         public string Telfijo { get; set; }
         public string Email { get; set; }
-        public int? IdTipoIdentificador { get; set; }
+
+        public TipoIdentificador? TipoIdentificador { get; set; }
+        //public int? IdTipoIdentificador { get; set; }
         public int? NroIdentificacion { get; set; }
         public string TipoPersona { get; set; }
-        public int? IdGenero { get; set; }
+        public Genero? Genero { get; set; }
         public string Ocupacion { get; set; }
-        public int? IdEstadoCivil { get; set; }
+        public EstadoCivil? EstadoCivil { get; set; }
         public DateTime FechaAlta { get; set; }
         public string UsrAlta { get; set; }
         public DateTime? FechaBaja { get; set; }

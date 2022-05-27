@@ -9,18 +9,18 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
     public interface ITipoidentificadorDao
     {
         //Crear el nuevo objeto en la base
-        Task<bool> create(Tipoidentificador tipoidentificador);
+        Task<bool> create(TipoIdentificador tipoidentificador);
 
         //actualizar el objeto en la base
-        Task<bool> update(Tipoidentificador tipoidentificador);
+        Task<bool> update(TipoIdentificador tipoidentificador);
 
         //eliminar el objeto de la base 
         Task<bool> delete(int id);
 
         //recuperar un objeto desde la base        
-        Task<Tipoidentificador> find(int id);
+        Task<TipoIdentificador> find(int id);
 
         //recuperar todos los objetos desde la base
-        Task<IEnumerable<Tipoidentificador>> findAll();
+        Task<IEnumerable<TipoIdentificador>> findAll();
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WebApiTalleres.Models
 {
-    public partial class Estadocivil
+    public partial class EstadoCivil
     {
         public int Id { get; set; }
         public string Descripcion { get; set; }

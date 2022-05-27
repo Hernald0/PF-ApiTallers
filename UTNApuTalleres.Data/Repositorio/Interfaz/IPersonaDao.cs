@@ -20,6 +20,8 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
         //recuperar un objeto desde la base        
         Task<Persona> find(int id);
 
+        Task<Persona> find2(int id);
+
         //recuperar todos los objetos desde la base
         Task<IEnumerable<Persona>> findAll();
 
