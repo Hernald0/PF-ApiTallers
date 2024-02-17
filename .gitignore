@@ -1,0 +1,8 @@
+# Carpeta bin y obj de compilación
+bin/
+obj/
+
+# Archivos de configuración
+*.user
+*.suo
+*.sln.docstates
