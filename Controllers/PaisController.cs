@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UTNApiTalleres.Data.Repositorio;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
 using WebApiTalleres.Models;
 
@@ -122,6 +123,48 @@ namespace UTNApiTalleres.Controllers
                 await _paisDao.delete(id);
 
                 return NoContent();
+
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        // GET: api/<TIpoIdentificadorController>
+        [HttpGet]
+        [Route("Localidades/{cadena}")]
+        public async Task<IActionResult> GetAllLocalidades(String cadena)
+        {
+            try
+            {
+                var localidades = await _paisDao.findLocalidadesAll(cadena);
+
+                return Ok(localidades);
+
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        // GET: api/<TIpoIdentificadorController>
+        /*[HttpGet("{id}")]
+        [Route("Provincias/{id}")]*/
+        [HttpGet]
+        [Route("Provincias/{id}")]
+        public async Task<IActionResult> GetAllProvincias(int id)
+        {
+            try
+            {
+                var provincias = await _paisDao.findProvinciaAll(id);
+
+                return Ok(provincias);
 
             }
             catch (Exception ex)

@@ -78,7 +78,7 @@ namespace UTNApiTalleres.Controllers
         }
 
         // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateEstadoCivil([FromBody] EstadoCivil EstadoCivil)
         {
 
@@ -95,7 +95,9 @@ namespace UTNApiTalleres.Controllers
                 var actualizado = await _EstadoCivilDao.update(EstadoCivil);
 
                 if (actualizado)
-                    return Content("Actualización exitosa.");
+                    //return Content("Actualización exitosa.");
+                    //return Ok("Actualización exitosa.");
+                    return Ok(new { response = "Actualización exitosa" });
                 else
                     return NoContent();
             }

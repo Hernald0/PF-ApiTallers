@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
+using UTNApiTalleres.Model;
 using WebApiTalleres.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,6 +16,7 @@ namespace UTNApiTalleres.Controllers
     public class TallerController : ControllerBase
     {
         private readonly ITallerDao _tallerDao;
+
 
         public TallerController(ITallerDao TallerDao)
         {
@@ -34,7 +36,7 @@ namespace UTNApiTalleres.Controllers
                 //log error
                 return StatusCode(500, ex.Message);
             }
-            
+
         }
 
 
@@ -123,6 +125,267 @@ namespace UTNApiTalleres.Controllers
                 //log error
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpGet()]
+        [Route("empleados/{id:int}")]
+        public async Task<IActionResult> findEmpleadoAll(int id)
+        {
+
+            try
+            {
+                var empleados = await _tallerDao.findEmpleadoAll(id);
+                return Ok(empleados);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
+        [HttpPost()]
+        [Route("modelovehiculo")]
+        public async Task<IActionResult> postMarcaModelo(mvvmModelovehiculo mvvmModelovehiculo)
+        {
+            try
+            {
+                var nuevoModeloVehiculo = await _tallerDao.createMarcaModelo(mvvmModelovehiculo);
+                return Ok(nuevoModeloVehiculo);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        [HttpPut()]
+        [Route("empleados")]
+        public async Task<IActionResult> putEmpleado(Empleado empleado)
+        {
+
+            try
+            {
+                var empleados = await _tallerDao.createEmpleado(empleado);
+                return Ok(empleados);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+        /*
+        [HttpDelete()]
+        [Route("empleados")]
+        public async Task<IActionResult> deleteEmpleado(Empleado empleado)
+        {
+
+            try
+            {
+                var empleados = await _tallerDao.deleteEmpleado(empleado);
+                return Ok(empleados);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }*/
+
+        [HttpGet()]
+        [Route("clientes/{id:int}")]
+        public async Task<IActionResult> findClienteAll(int id)
+        {
+
+            try
+            {
+                var clientes = await _tallerDao.findClienteAll(id);
+                return Ok(clientes);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
+
+        [HttpGet()]
+        [Route("marcaVehiculo")]
+        public async Task<IActionResult> findMarcaVehiculoAll()
+        {
+
+            try
+            {
+                var oMarcas = await _tallerDao.findMarcaVehiculoAll();
+                return Ok(oMarcas);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
+
+
+        [HttpGet()]
+        [Route("marcaModelosVehiculo/{id:int}")]
+        public async Task<IActionResult> findModeloVehiculoA(int id)
+        {
+
+            try
+            {
+                var oMarcaModelo = await _tallerDao.findMarcaModeloVehiculo(id);
+                return Ok(oMarcaModelo);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
+        [HttpGet()]
+        [Route("modelosVehiculo")]
+        public async Task<IActionResult> findModeloVehiculoAll()
+        {
+
+            try
+            {
+                var oMarcaModelo = await _tallerDao.findMarcaModeloVehiculoAll();
+                return Ok(oMarcaModelo);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
+        [HttpPut()]
+        [Route("updModeloVehiculo")]
+        public async Task<IActionResult> updateModeloVehiculo(mvvmModelovehiculo modelo)
+        {
+
+            try
+            {
+                var oMarcaModelo = await _tallerDao.updateMarcaModelo(modelo);
+                return Ok(oMarcaModelo);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
+        [HttpDelete()]
+        [Route("delModeloVehiculo/{id:int}")]
+        public async Task<IActionResult> deleteModeloVehiculo(int id) //(mvvmModelovehiculo modelo)
+        {
+
+            try
+            {
+                var oMarcaModelo = await _tallerDao.deleteMarcaModelo(id);
+                return Ok(oMarcaModelo);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
+
+        [HttpPost()]
+        [Route("insServicio")]
+        public async Task<IActionResult> postServicio(Servicio servicio)
+        {
+            try
+            {
+                var nuevoServicio = await _tallerDao.createServicio(servicio);
+                return Ok(nuevoServicio);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        [HttpPut()]
+        [Route("updServicio")]
+        public async Task<IActionResult> updateServicio(Servicio servicio)
+        {
+            try
+            {
+                var modificacionServicio = await _tallerDao.updateServicio(servicio);
+                return Ok(modificacionServicio);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        [HttpDelete()]
+        [Route("delServicio/{id:int}")]
+        public async Task<IActionResult> deleteServicio(int IdServicio)
+        {
+            try
+            {
+                var eliminadoServicio = await _tallerDao.deleteServicio(IdServicio);
+                return Ok(eliminadoServicio);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        [HttpGet()]
+        [Route("findAllServicio")]
+        public async Task<IActionResult> findAllServicio()
+        {
+
+            try
+            {
+                var oServicios = await _tallerDao.findAllServicio();
+                return Ok(oServicios);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
         }
     }
 }

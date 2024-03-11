@@ -4665,27 +4665,20 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Hernaldo\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\DELL\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Documents\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.csproj",
+      "projectUniqueName": "D:\\Documentos\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.csproj",
       "projectName": "UTNApiTalleres",
-      "projectPath": "D:\\Documents\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.csproj",
-      "packagesPath": "C:\\Users\\Hernaldo\\.nuget\\packages\\",
-      "outputPath": "D:\\Documents\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\obj\\",
+      "projectPath": "D:\\Documentos\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.csproj",
+      "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
+      "outputPath": "D:\\Documentos\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Hernaldo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -4696,12 +4689,13 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "projectReferences": {
-            "D:\\Documents\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.Model\\UTNApiTalleres.Model.csproj": {
-              "projectPath": "D:\\Documents\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.Model\\UTNApiTalleres.Model.csproj"
+            "D:\\Documentos\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.Model\\UTNApiTalleres.Model.csproj": {
+              "projectPath": "D:\\Documentos\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.Model\\UTNApiTalleres.Model.csproj"
             },
-            "D:\\Documents\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApuTalleres.Data\\UTNApiTalleres.Data.csproj": {
-              "projectPath": "D:\\Documents\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApuTalleres.Data\\UTNApiTalleres.Data.csproj"
+            "D:\\Documentos\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApuTalleres.Data\\UTNApiTalleres.Data.csproj": {
+              "projectPath": "D:\\Documentos\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApuTalleres.Data\\UTNApiTalleres.Data.csproj"
             }
           }
         }
@@ -4714,6 +4708,7 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
+        "targetAlias": "netcoreapp3.1",
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
             "target": "Package",
@@ -4742,7 +4737,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.419\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }

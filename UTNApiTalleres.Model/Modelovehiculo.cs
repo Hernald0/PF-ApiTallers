@@ -7,10 +7,21 @@ namespace WebApiTalleres.Models
 {
     public partial class Modelovehiculo
     {
-        public int Id { get; set; }
-        public int IdMarca { get; set; }
+        public int Id { get; set; }    
+        
         public string Nombre { get; set; }
 
-        public virtual Marcavehiculo IdMarcaNavigation { get; set; }
-    }
+        public int IdMarca { get; set; }
+
+        public Marcavehiculo Marcavehiculo  { get; set; }
+
+        /*
+        public Marcavehiculo Marcavehiculo  { get; set; }
+            
+        public Modelovehiculo()
+        {
+            this.Marcavehiculo = null;
+        }*/
+    }   
+
 }

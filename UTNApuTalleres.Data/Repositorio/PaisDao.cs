@@ -111,6 +111,44 @@ namespace UTNApiTalleres.Data.Repositorio
             }
         }
 
-       
+        public async Task<IEnumerable<Localidad>> findLocalidadesAll(String cadena)
+        {
+            var sql_query = @"  select loc.*,  CONCAT(loc.""CodigoPostal"", '-', loc.""Nombre"") as cpNombre 
+                              from public.""Pais"" as pais inner join public.""Provincia"" as prov
+                                        on pais.""Id"" = prov.""IdPais""
+                                    inner join public.""Localidades"" loc
+                                        on loc.""IdProvincia"" = prov.""Id""
+                                where loc.""Nombre"" like CONCAT('%',@cadena,'%') 
+                                   or cast(loc.""CodigoPostal"" as varchar) like CONCAT('%',@cadena,'%')
+                                  and prov.""Id"" = 3
+                            ";
+
+            using (var db = dbConnection())
+            {
+                var oLocalidades = await db.QueryAsync<Localidad>(sql_query, new { cadena = cadena });
+
+                return oLocalidades.ToList();
+
+            }
+
+
+        }
+
+        public async Task<IEnumerable<Provincia>> findProvinciaAll(int idPais)
+        {
+            var sql_query = @"  select prov.* 
+                              from public.""Pais"" as pais inner join public.""Provincia"" as prov
+                                        on pais.""Id"" = prov.""IdPais""                                  
+                                where  pais.""Id"" = @idPais
+                            ";
+
+            using (var db = dbConnection())
+            {
+                var oProvincias = await db.QueryAsync<Provincia>(sql_query, new { IdPais = idPais });
+
+                return oProvincias.ToList();
+
+            }
+        }
     }
 }

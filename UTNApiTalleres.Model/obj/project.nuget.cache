@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "y9ZBYTNCO/FGjTDcVqCJqAro8t2rmBysJuRhgkLWgOdaG9cms88P9NI1bVGpkfk2++b7c/TkmoofYxe280WelQ==",
+  "dgSpecHash": "yQ+JpO/sI7TjUNU3q67SV9jVOFtPbi9PxWyrwtN8pnCdULEwV37Aq0S7dL5E8By85l6w02f2LlGEHqhLC025kQ==",
   "success": true,
-  "projectFilePath": "D:\\Documents\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.Model\\UTNApiTalleres.Model.csproj",
+  "projectFilePath": "D:\\Documentos\\Hernaldo\\Facultad\\Proyecto\\Repositorio\\PF-ApiTallers\\UTNApiTalleres.Model\\UTNApiTalleres.Model.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Hernaldo\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+    "C:\\Users\\DELL\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
   ],
   "logs": []
 }

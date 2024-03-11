@@ -23,3 +23,16 @@ D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres
 D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.csproj.CopyComplete
 D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.dll
 D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.pdb
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\bin\Debug\netcoreapp3.1\UTNApiTalleres.Data.deps.json
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\bin\Debug\netcoreapp3.1\UTNApiTalleres.Data.dll
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\bin\Debug\netcoreapp3.1\UTNApiTalleres.Data.pdb
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.dll
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.pdb
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.csproj.AssemblyReference.cache
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.GeneratedMSBuildEditorConfig.editorconfig
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.AssemblyInfoInputs.cache
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.AssemblyInfo.cs
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.csproj.CoreCompileInputs.cache
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.csproj.CopyComplete
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.dll
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApuTalleres.Data\obj\Debug\netcoreapp3.1\UTNApiTalleres.Data.pdb

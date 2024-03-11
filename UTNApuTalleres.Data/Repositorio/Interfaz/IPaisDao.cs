@@ -22,5 +22,9 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         //recuperar todos los objetos desde la base
         Task<IEnumerable<Pais>> findAll();
+
+        Task<IEnumerable<Localidad>> findLocalidadesAll(String cadena);
+
+        Task<IEnumerable<Provincia>> findProvinciaAll(int idPais);
     }
 }

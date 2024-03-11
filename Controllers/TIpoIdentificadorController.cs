@@ -94,7 +94,7 @@ namespace UTNApiTalleres.Controllers
                 var actualizado = await _tipoidentificadorDao.update(tipoidentificador);
 
                 if (actualizado)
-                    return Content("Actualización exitosa.");
+                    return Ok(new { response = "Actualización exitosa." });
                 else
                     return NoContent();
             }

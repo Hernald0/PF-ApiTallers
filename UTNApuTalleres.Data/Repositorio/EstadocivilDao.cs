@@ -54,7 +54,7 @@ namespace UTNApiTalleres.Data.Repositorio
             var query = @"UPDATE public.""Estadociviles""                            
                           SET  
                             ""Descripcion"" = @Descripcion
-                          WHERE ""Id"" = @Id";
+                              WHERE ""Id"" = @Id";
 
             var parameters = new DynamicParameters();
 
@@ -71,17 +71,54 @@ namespace UTNApiTalleres.Data.Repositorio
 
         public async Task<bool> delete(int id)
         {
+
             var db = dbConnection();
 
-            var sql_script = @"
+            try
+            {
+                
+                var sql_script = @"
                                 DELETE 
                                 FROM  public.""Estadociviles""
                                 WHERE ""Id"" = @Id  
                             ";
 
-            var result = await db.ExecuteAsync(sql_script, new { Id = id });
+                var result = await db.ExecuteAsync(sql_script, new { Id = id });
 
-            return result > 0;
+                return result > 0;
+
+            }
+            catch (PostgresException e)
+            {
+
+                var parameters = new DynamicParameters();
+
+                parameters.Add("Id", id, DbType.Int32);
+                parameters.Add("FechaBaja", DateTime.Now, DbType.DateTime);
+                parameters.Add("Usuario", "HCELAYA", DbType.String);
+
+                var sql_script="";
+                
+                //Controla la FK
+                //if (e.SqlState.Equals("23503"))
+                if (e.ConstraintName.Equals("fk_personas_estadociviles")) 
+                {
+                     sql_script = @"
+                                        UPDATE  public.""Estadociviles""
+                                        SET ""FechaBaja"" = @FechaBaja,
+                                            ""UsuarioBaja"" = @Usuario                               
+                                         WHERE ""Id"" = @Id  
+                                    ";
+
+                    var result = await db.ExecuteAsync(sql_script, parameters);
+
+                    return result > 0;
+                }
+
+                else
+                    
+                    return false;
+            }
         }
 
         public async Task<EstadoCivil> find(int id)

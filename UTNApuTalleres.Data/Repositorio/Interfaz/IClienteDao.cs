@@ -9,7 +9,7 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
     public interface IClienteDao
     {
         //Crear el nuevo objeto en la base
-        Task<bool> create(Cliente Cliente);
+        Task<Cliente> create(Cliente pCliente);
 
         //actualizar el objeto en la base
         Task<bool> update(Cliente Cliente);

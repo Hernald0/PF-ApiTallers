@@ -87,7 +87,7 @@ namespace UTNApiTalleres.Controllers
                 var actualizado = await _clienteDao.update(Cliente);
 
                 if (actualizado)
-                    return Content("Actualización exitosa.");
+                    return Ok(new { response = "Actualización exitosa." });
                 else
                     return NoContent();
             }

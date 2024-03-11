@@ -30,14 +30,18 @@ namespace UTNApiTalleres.Data.Repositorio
         public async Task<bool> create(Aseguradora aseguradora)
         {
             
-            var sql_insert = @"INSERT INTO public.""Aseguradoras"" (""Nombre"")
-                               VALUES ( @Nombre  )
+            var sql_insert = @"INSERT INTO public.""Aseguradoras"" (""Nombre"", 
+                                                                    ""UsuarioAlta"",
+                                                                    ""FechaAlta"")
+                               VALUES ( @Nombre, @UsuarioAlta, @FechaAlta  )
                              ";
             
             var parameters = new DynamicParameters();
             
             parameters.Add("Nombre", aseguradora.Nombre, DbType.String);
-            
+            parameters.Add("UsuarioAlta", "HCELAYA", DbType.String);
+            parameters.Add("FechaAlta", DateTime.Now, DbType.DateTime);
+
             using (var connection = dbConnection())
             {
                 var result = await connection.ExecuteAsync(sql_insert, parameters);
@@ -89,7 +93,12 @@ namespace UTNApiTalleres.Data.Repositorio
         {
             var db = dbConnection();
 
-            var command = @" select ""Id"", ""Nombre""
+            var command = @" select ""Id"", 
+                                    ""Nombre"",
+                                    ""UsuarioAlta"",
+                                    ""FechaAlta"",
+                                    ""UsuarioBaja"",
+                                    ""FechaBaja""
                              from public.""Aseguradoras""
                              where ""Id"" = @Id ";
 
@@ -101,7 +110,11 @@ namespace UTNApiTalleres.Data.Repositorio
             
 
             var query = @" select ""Id"", 
-                                    ""Nombre""
+                                    ""Nombre"",
+                                    ""UsuarioAlta"",
+                                    ""FechaAlta"",
+                                    ""UsuarioBaja"",
+                                    ""FechaBaja""
                              from public.""Aseguradoras""
                             ";
             using (var db = dbConnection())

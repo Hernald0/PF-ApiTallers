@@ -17,3 +17,13 @@ D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres
 D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.dll
 D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.pdb
 D:\Documents\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.csprojAssemblyReference.cache
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.deps.json
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.dll
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\bin\Debug\netcoreapp3.1\UTNApiTalleres.Model.pdb
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.csproj.AssemblyReference.cache
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.GeneratedMSBuildEditorConfig.editorconfig
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.AssemblyInfoInputs.cache
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.AssemblyInfo.cs
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.csproj.CoreCompileInputs.cache
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.dll
+D:\Documentos\Hernaldo\Facultad\Proyecto\Repositorio\PF-ApiTallers\UTNApiTalleres.Model\obj\Debug\netcoreapp3.1\UTNApiTalleres.Model.pdb

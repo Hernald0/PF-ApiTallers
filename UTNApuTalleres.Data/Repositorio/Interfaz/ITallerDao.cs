@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System;
 using WebApiTalleres.Models;
+using UTNApiTalleres.Model;
 
 namespace UTNApiTalleres.Data.Repositorio.Interfaz
 {
@@ -22,6 +23,32 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         //recuperar todos los objetos desde la base
         Task<IEnumerable<Taller>> findAll();
+
+        Task<IEnumerable<Empleado>> findEmpleadoAll(int id);
+
+        Task<bool> createEmpleado(Empleado empleado);
+
+        Task<Modelovehiculo>createMarcaModelo(mvvmModelovehiculo marcaModelo);
+
+        Task<IEnumerable<Cliente>> findClienteAll(int id);
+
+        Task<IEnumerable<Marcavehiculo>> findMarcaVehiculoAll();
+
+        Task<Marcavehiculo> findMarcaModeloVehiculo(int idMarca);
+
+        Task<List<Marcavehiculo>> findMarcaModeloVehiculoAll();
+        Task<mvvmModelovehiculo?> updateMarcaModelo(mvvmModelovehiculo marcaModelo);
+
+        Task<int?> deleteMarcaModelo(int id);//(mvvmModelovehiculo marcaModelo);
+
+        #region Servicios
+        Task<Servicio> createServicio(Servicio servicio);
+        Task<int> deleteServicio(int IdServicio);
+        Task<Servicio> updateServicio(Servicio servicio);
+        Task<Servicio> findServicio(int IdServicio);
+        Task<IEnumerable<Servicio>> findAllServicio();
+
+        #endregion
 
 
     }

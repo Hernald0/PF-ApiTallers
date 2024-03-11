@@ -9,7 +9,7 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
     public interface IPersonaDao
     {
         //Crear el nuevo objeto en la base
-        Task<bool> create(Persona Persona);
+        Task<int> create(Persona Persona);
 
         //actualizar el objeto en la base
         Task<bool> update(Persona Persona);

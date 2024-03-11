@@ -84,7 +84,7 @@ namespace UTNApiTalleres.Controllers
                 var actualizado = await _aseguradoraDao.update(Aseguradora);
 
                 if (actualizado)
-                    return Content("Actualización exitosa.");
+                    return Ok(new { response = "Actualización exitosa." });
                 else
                     return NoContent();
             }

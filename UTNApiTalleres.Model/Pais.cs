@@ -9,6 +9,8 @@ namespace WebApiTalleres.Models
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public sbyte? CodigoArea { get; set; }
-    }
+        public int? CodigoArea { get; set; }
+        public ICollection<Provincia> Provincias { get; set; }
+
+}
 }
