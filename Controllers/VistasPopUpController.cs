@@ -23,12 +23,12 @@ namespace UTNApiTalleres.Controllers
         }
 
         [HttpGet("{vistaPopUp}")]
-        public async Task<object> GetVistaPopUp(string vistaPopUp)
+        public async Task<object> GetVistaPopUp(string vistaPopUp, [FromQuery] string? parametro = null)
         {
 
             try
             {
-                var datosVista = await _configuracionDao.getDatos(vistaPopUp);
+                var datosVista = await _configuracionDao.getDatos(vistaPopUp, parametro);
 
                 if (datosVista == null)
                     //var clase =  new { null };

@@ -61,6 +61,7 @@ namespace UTNApiTalleres
             services.AddScoped<ITipoidentificadorDao, TipoidentificadorDao>();
             services.AddScoped<IPaisDao, PaisDao>();
             services.AddScoped<IConfiguracionDao, ConfiguracionDao>();
+            services.AddScoped<ITurnoDao, TurnoDao>();
 
 
 

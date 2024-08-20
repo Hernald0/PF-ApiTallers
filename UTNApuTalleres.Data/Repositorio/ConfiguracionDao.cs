@@ -24,7 +24,7 @@ namespace UTNApiTalleres.Data.Repositorio
         {
             return new NpgsqlConnection(_connectionString.ConnectionString);
         }
-        public async Task<object> getDatos(string nombreVistaPopUp)
+        public async Task<object> getDatos(string nombreVistaPopUp, string? parametro = null)
         {
             try
             {
@@ -42,6 +42,8 @@ namespace UTNApiTalleres.Data.Repositorio
                     // Manejar el caso en el que la vista no se encuentre en la tabla de configuración
                     return null;
                 }
+
+                if (!String.IsNullOrEmpty(parametro)) config.ConsultaSelect = config.ConsultaSelect.Replace( "@parametro", parametro);
 
                 // Ejecutar la consulta select obtenida
                 var tableData = await db.QueryAsync(config.ConsultaSelect);

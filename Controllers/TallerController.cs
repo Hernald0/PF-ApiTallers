@@ -243,7 +243,7 @@ namespace UTNApiTalleres.Controllers
 
         [HttpGet()]
         [Route("marcaModelosVehiculo/{id:int}")]
-        public async Task<IActionResult> findModeloVehiculoA(int id)
+        public async Task<IActionResult> findModeloVehiculo(int id)
         {
 
             try
@@ -378,6 +378,25 @@ namespace UTNApiTalleres.Controllers
             {
                 var oServicios = await _tallerDao.findAllServicio();
                 return Ok(oServicios);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
+        [HttpGet()]
+        [Route("Vehiculo")]
+        public async Task<IActionResult> getVehiculo(int idVehiculo)
+        {
+
+            try
+            {
+                var oVehiculo = await _tallerDao.getVehiculo(idVehiculo);
+                return Ok(oVehiculo);
             }
             catch (Exception ex)
             {

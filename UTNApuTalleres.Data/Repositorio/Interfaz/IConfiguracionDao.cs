@@ -9,7 +9,7 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
     {
 
         //Crear el nuevo objeto en la base
-        Task<object> getDatos(string nombreVistaPopUp);
+        Task<object> getDatos(string nombreVistaPopUp, string parametro );
             
     }
 }

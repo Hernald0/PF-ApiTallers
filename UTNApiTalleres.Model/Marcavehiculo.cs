@@ -12,7 +12,7 @@ namespace WebApiTalleres.Models
             Modelovehiculos = new HashSet<Modelovehiculo>();
         }*/
 
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Nombre { get; set; }
         public virtual ICollection<Modelovehiculo> Modelovehiculos { get; set; }
 

@@ -345,10 +345,10 @@ namespace UTNApiTalleres.Data.Repositorio
                 var marcas = await connection.QueryAsync<Marcavehiculo, Modelovehiculo, Marcavehiculo>(
                     query, (marca, modelo) =>
                     {
-                        if (!marcaDict.TryGetValue(marca.Id, out var currentMarca))
+                        if (!marcaDict.TryGetValue((int)marca.Id, out var currentMarca))
                         {
                             currentMarca = marca;
-                            marcaDict.Add(currentMarca.Id, currentMarca);
+                            marcaDict.Add((int)currentMarca.Id, currentMarca);
                         }
                         currentMarca.Modelovehiculos.Add(modelo);
                         return currentMarca;
@@ -490,6 +490,55 @@ namespace UTNApiTalleres.Data.Repositorio
             }
 
             return affectedRows;
+
+        }
+
+        public async Task<Vehiculo> getVehiculo(int idVehiculo)
+        {
+          
+
+            using (var db = dbConnection())
+            { 
+                var sql_query = @"select   ve.""Id"" as veId, 
+	                                       ve.""Patente"",
+	                                       ve.""Color"",
+	                                       ve.""NumeroSerie"",
+	                                       ve.""anio"",
+	                                       mv.""Id"" as mvId,
+	                                       mv.""Nombre"",
+	                                       mav.""Id"" as mavId,
+	                                       mav.""Nombre""
+                                    from public.""Vehiculos"" as ve
+	                                     left join public.""Modelovehiculos"" mv
+					                                    on (ve.""IdModelo"" = mv.""Id"" )
+	                                     left join public.""Marcavehiculos"" mav 
+	 				                                    on (mv.""IdMarca"" = mav.""Id"" )
+                                    where ve.""Id"" = @Id;";
+
+                var oVehiculo =  await db.QueryAsync<Vehiculo, Modelovehiculo, Marcavehiculo, Vehiculo>(sql_query,
+                                             map: (vehiculo, modelovehiculo, marcavehiculo) =>
+                                             {
+                                                 if (vehiculo.Id > 0)
+                                                 {
+                                                     if (modelovehiculo.Id > 0)
+                                                         vehiculo.Modelovehiculo = (Modelovehiculo) modelovehiculo;
+
+                                                     if (marcavehiculo.Id > 0)
+                                                         vehiculo.Modelovehiculo.Marcavehiculo  = (Marcavehiculo) marcavehiculo;
+
+                                                    
+
+                                                 }; return vehiculo;
+                                             },
+                                             new { Id = idVehiculo },
+                                             splitOn: "veId,mvId,mavId").ConfigureAwait(false);
+
+               
+                return (Vehiculo) oVehiculo.FirstOrDefault();
+
+            }
+
+            
 
         }
 

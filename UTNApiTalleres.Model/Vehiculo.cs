@@ -15,6 +15,6 @@ namespace WebApiTalleres.Models
 
         public string Color { get; set; }
 
-        public int Anio { get; set; }
+        public int? Anio { get; set; }
     }
 }

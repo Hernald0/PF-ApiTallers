@@ -41,6 +41,8 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         Task<int?> deleteMarcaModelo(int id);//(mvvmModelovehiculo marcaModelo);
 
+        Task<Vehiculo> getVehiculo(int idVehiculo);
+
         #region Servicios
         Task<Servicio> createServicio(Servicio servicio);
         Task<int> deleteServicio(int IdServicio);
