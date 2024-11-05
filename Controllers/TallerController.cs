@@ -146,6 +146,25 @@ namespace UTNApiTalleres.Controllers
 
         }
 
+        [HttpGet()]
+        [Route("Vehiculo")]
+        public async Task<IActionResult> getVehiculo(int idVehiculo)
+        {
+
+            try
+            {
+                var oVehiculo = await _tallerDao.getVehiculo(idVehiculo);
+                return Ok(oVehiculo);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
         [HttpPost()]
         [Route("modelovehiculo")]
         public async Task<IActionResult> postMarcaModelo(mvvmModelovehiculo mvvmModelovehiculo)
@@ -318,93 +337,8 @@ namespace UTNApiTalleres.Controllers
         }
 
 
-        [HttpPost()]
-        [Route("insServicio")]
-        public async Task<IActionResult> postServicio(Servicio servicio)
-        {
-            try
-            {
-                var nuevoServicio = await _tallerDao.createServicio(servicio);
-                return Ok(nuevoServicio);
-            }
-            catch (Exception ex)
-            {
-                //log error
-                return StatusCode(500, ex.Message);
-            }
+       
 
-        }
-
-        [HttpPut()]
-        [Route("updServicio")]
-        public async Task<IActionResult> updateServicio(Servicio servicio)
-        {
-            try
-            {
-                var modificacionServicio = await _tallerDao.updateServicio(servicio);
-                return Ok(modificacionServicio);
-            }
-            catch (Exception ex)
-            {
-                //log error
-                return StatusCode(500, ex.Message);
-            }
-
-        }
-
-        [HttpDelete()]
-        [Route("delServicio/{id:int}")]
-        public async Task<IActionResult> deleteServicio(int IdServicio)
-        {
-            try
-            {
-                var eliminadoServicio = await _tallerDao.deleteServicio(IdServicio);
-                return Ok(eliminadoServicio);
-            }
-            catch (Exception ex)
-            {
-                //log error
-                return StatusCode(500, ex.Message);
-            }
-
-        }
-
-        [HttpGet()]
-        [Route("findAllServicio")]
-        public async Task<IActionResult> findAllServicio()
-        {
-
-            try
-            {
-                var oServicios = await _tallerDao.findAllServicio();
-                return Ok(oServicios);
-            }
-            catch (Exception ex)
-            {
-                //log error
-                return StatusCode(500, ex.Message);
-            }
-
-
-        }
-
-        [HttpGet()]
-        [Route("Vehiculo")]
-        public async Task<IActionResult> getVehiculo(int idVehiculo)
-        {
-
-            try
-            {
-                var oVehiculo = await _tallerDao.getVehiculo(idVehiculo);
-                return Ok(oVehiculo);
-            }
-            catch (Exception ex)
-            {
-                //log error
-                return StatusCode(500, ex.Message);
-            }
-
-
-        }
+        
     }
 }

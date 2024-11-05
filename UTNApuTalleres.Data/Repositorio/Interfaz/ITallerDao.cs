@@ -43,14 +43,7 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         Task<Vehiculo> getVehiculo(int idVehiculo);
 
-        #region Servicios
-        Task<Servicio> createServicio(Servicio servicio);
-        Task<int> deleteServicio(int IdServicio);
-        Task<Servicio> updateServicio(Servicio servicio);
-        Task<Servicio> findServicio(int IdServicio);
-        Task<IEnumerable<Servicio>> findAllServicio();
-
-        #endregion
+    
 
 
     }
