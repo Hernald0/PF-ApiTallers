@@ -1,0 +1,16 @@
+# .gitignore
+bin/
+obj/
+/obj/
+.vscode/
+*.user
+*.suo
+*.userpref
+
+# Archivos específicos para cada proyecto en la solución
+UTNApitalleres/bin/
+UTNApitalleres/obj/
+UTNApitalleres.Data/bin/
+UTNApitalleres.Data/obj/
+UTNApitalleres.Model/bin/
+UTNApitalleres.Model/obj/
