@@ -1,15 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using UTNApiTalleres.Data;
 using UTNApiTalleres.Data.Repositorio;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
@@ -20,18 +15,14 @@ namespace UTNApiTalleres
     public class Startup
     {
         public Startup(IWebHostEnvironment env)
-                      //(IConfiguration configuration)
         {
-
             var builder = new ConfigurationBuilder()
                            .SetBasePath(env.ContentRootPath)
                            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                            .AddEnvironmentVariables();
-           
 
             Configuration = builder.Build();
-           // Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -44,13 +35,11 @@ namespace UTNApiTalleres
             services.AddControllers().AddNewtonsoftJson(x =>
                 x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            var cadena = Configuration.GetConnectionString("PostgreSQLConnection");
+            var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
+                                   ?? Configuration.GetConnectionString("PostgreSQLConnection");
 
-            Console.WriteLine(cadena);
-
-            var postgresqSQLConnectionConfiguration = new PostgresqlConfiguration(Configuration.GetConnectionString("PostgreSQLConnection"));
-            
-            services.AddSingleton(postgresqSQLConnectionConfiguration);
+            var postgresConfiguration = new PostgresqlConfiguration(connectionString);
+            services.AddSingleton(postgresConfiguration);
 
             services.AddScoped<IAseguradoraDao, AseguradoraDao>();
             services.AddScoped<IClienteDao, ClienteDao>();
@@ -63,11 +52,7 @@ namespace UTNApiTalleres
             services.AddScoped<IConfiguracionDao, ConfiguracionDao>();
             services.AddScoped<ITurnoDao, TurnoDao>();
             services.AddScoped<IServRepDao, ServRepDao>();
-            
 
-
-
-            //////////////////////////////////////
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1",
@@ -79,7 +64,15 @@ namespace UTNApiTalleres
                     });
             });
 
-            
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,16 +82,13 @@ namespace UTNApiTalleres
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HerokuApiDemo v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "UTNApiTalleres v1"));
             }
 
-            app.UseCors(options =>
-                options.WithOrigins("http://localhost:4200")
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-            );
+            app.UseCors();
 
-            app.UseHttpsRedirection();
+            // Comment or remove the line below if HTTPS redirection is causing issues in production
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
