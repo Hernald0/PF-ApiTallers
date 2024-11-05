@@ -1,8 +1,0 @@
-# .gitignore
-bin/
-obj/
-/obj/
-.vscode/
-*.user
-*.suo
-*.userpref
