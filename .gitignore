@@ -3,6 +3,7 @@ bin/
 obj/
 /obj/
 .vscode/
+.vs/
 *.user
 *.suo
 *.userpref
