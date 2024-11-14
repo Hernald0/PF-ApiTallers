@@ -18,8 +18,9 @@ namespace UTNApiTalleres.Controllers
             _aseguradoraDao = aseguradoraDao;
         }
 
-        [HttpGet("Init")]
-        public async Task<IActionResult> Init()
+        [HttpGet]
+        [Route("Init")]
+        public IActionResult Init()
         {
           
                 
