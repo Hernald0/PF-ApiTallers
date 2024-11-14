@@ -18,6 +18,16 @@ namespace UTNApiTalleres.Controllers
             _aseguradoraDao = aseguradoraDao;
         }
 
+        [HttpGet("Init")]
+        public async Task<IActionResult> Init()
+        {
+          
+                
+                return StatusCode(200, "Hola Mundo!");
+           
+
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllAseguradora()
         {
