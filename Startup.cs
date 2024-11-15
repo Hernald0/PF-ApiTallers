@@ -35,8 +35,9 @@ namespace UTNApiTalleres
             services.AddControllers().AddNewtonsoftJson(x =>
                 x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            var connectionString = Environment.GetEnvironmentVariable("DATABASE_PUBLIC_URL")
-                                   ?? Configuration.GetConnectionString("PostgreSQLConnection");
+            var connectionString = Configuration.GetConnectionString("PostgreSQLConnection");
+            /*Environment.GetEnvironmentVariable("DATABASE_PUBLIC_URL")
+                               ?? Configuration.GetConnectionString("PostgreSQLConnection");*/
 
             var postgresConfiguration = new PostgresqlConfiguration(connectionString);
             services.AddSingleton(postgresConfiguration);
