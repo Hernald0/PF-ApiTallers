@@ -16,10 +16,20 @@ namespace UTNApiTalleres
     {
         public Startup(IWebHostEnvironment env)
         {
+
+            Console.WriteLine($"Environment: {env.EnvironmentName}");
+
+            // Primero, intenta obtener el valor de `RAILWAY_ENVIRONMENT_NAME`
+            var railwayEnvironment = Environment.GetEnvironmentVariable("RAILWAY_ENVIRONMENT_NAME");
+
+            // Si `RAILWAY_ENVIRONMENT_NAME` tiene un valor, úsalo. Si no, usa `env.EnvironmentName`.
+            var environmentName = !string.IsNullOrEmpty(railwayEnvironment) ? railwayEnvironment : env.EnvironmentName;
+
+
             var builder = new ConfigurationBuilder()
                            .SetBasePath(env.ContentRootPath)
                            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                           .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                           .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
                            .AddEnvironmentVariables();
 
             Configuration = builder.Build();
