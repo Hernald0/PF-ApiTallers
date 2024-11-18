@@ -107,9 +107,10 @@ namespace UTNApiTalleres.Data.Repositorio
 
         public async Task<IEnumerable<Aseguradora>> findAll()
         {
-            
 
-            var query = @" select ""Id"", 
+            try
+            {
+                var query = @" select ""Id"", 
                                     ""Nombre"",
                                     ""UsuarioAlta"",
                                     ""FechaAlta"",
@@ -124,8 +125,14 @@ namespace UTNApiTalleres.Data.Repositorio
                 return oAseguradoras.ToList();
 
             }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error de conexión: {ex.Message}");
+                throw;
+            }
 
-            
+
         }
 
       
