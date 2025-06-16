@@ -4,7 +4,7 @@ using System.Text;
 
 namespace UTNApiTalleres.Model
 {
-    public class ItemDto
+    public class ItemVentaDTO
     {
         public int Id { get; set; }
         public string Nombre { get; set; }

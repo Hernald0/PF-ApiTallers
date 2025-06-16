@@ -152,7 +152,7 @@ namespace UTNApiTalleres.Data.Repositorio
             return updatedServicio;
         }
         
-        public async Task<IEnumerable<ItemDto>> FindFilterServRep(string pBusqueda)
+        public async Task<IEnumerable<ItemVentaDTO>> FindFilterServRep(string pBusqueda)
         {
 
             var db = dbConnection();
@@ -162,13 +162,13 @@ namespace UTNApiTalleres.Data.Repositorio
                                 SELECT ""Id"", ""Nombre"" as nombre, 'servicio' as tipo, ""Descripcion"", ""precioCosto"", ""precioVenta"", ""Duracion_aproximada"", ""Tipo"" as clase, null as stock
 	                                FROM public.""Servicios""
                                 union
-                                SELECT ""Id"", nombre, 'repuesto' as tipo, descripcion, ""precioCosto"", ""precioVenta"", null as ""Duracion_aproximada"", null as ""Tipo"", stock
+                                SELECT ""Id"", ""Nombre"", 'repuesto' as tipo, ""Descripcion"", ""precioCosto"", ""precioVenta"", null as ""Duracion_aproximada"", null as ""Tipo"", ""Stock""
 	                                FROM public.""Repuestos"") as tabla
                 WHERE lower(nombre) LIKE '%' || lower(@Parametro) || '%';";
 
              
               
-            var result = await db.QueryAsync<ItemDto>(sql, new { Parametro = pBusqueda });
+            var result = await db.QueryAsync<ItemVentaDTO>(sql, new { Parametro = pBusqueda });
                
             return  result.ToList();
              

@@ -18,7 +18,7 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         #endregion
 
-        Task<IEnumerable<ItemDto>> FindFilterServRep(string pBusqueda);
+        Task<IEnumerable<ItemVentaDTO>> FindFilterServRep(string pBusqueda);
 
     }
 }
