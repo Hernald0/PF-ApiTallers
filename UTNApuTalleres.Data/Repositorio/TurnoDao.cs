@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
+using UTNApiTalleres.Model;
 using WebApiTalleres.Models;
 
 namespace UTNApiTalleres.Data.Repositorio
@@ -14,12 +15,15 @@ namespace UTNApiTalleres.Data.Repositorio
     {
         private PostgresqlConfiguration _connectionString;
         private IClienteDao _clienteDao;
+        private IOrdenDao _ordenDao;
 
         public TurnoDao(PostgresqlConfiguration connectionString,
-                        IClienteDao             clienteDao)
+                        IClienteDao             clienteDao,
+                        IOrdenDao               ordenDao)
         {
             this._connectionString = connectionString;
             this._clienteDao = clienteDao;
+            this._ordenDao = ordenDao;
         }
 
         protected NpgsqlConnection dbConnection()
@@ -133,7 +137,7 @@ namespace UTNApiTalleres.Data.Repositorio
                 VALUES (@Fecha, @Hora, @IdCliente, @IdVehiculo, @MotivoConsulta, @Status)
                 returning  ""Id"" ";
             
-                var TurnoId = db.Execute(sql, new { Fecha = turno.Fecha, 
+                var TurnoId = await db.QuerySingleAsync<int>(sql, new { Fecha = turno.Fecha, 
                                                     Hora =  turno.Hora  ,
                                                     IdCliente = turno.Cliente.Id,
                                                     IdVehiculo = vehiculo.Id,
@@ -141,23 +145,20 @@ namespace UTNApiTalleres.Data.Repositorio
                                                     Status = "reservado"
                  });
 
-                /*/Dar de alta los servicios
-                foreach servicio as Servicio in turno.ServiciosElegidos
+                // Dar de alta los servicios
+                foreach (Servicio servicio in turno.Servicios)
                 {
-                    var sql = @"
-                                INSERT INTO Turno (Fecha, Hora, ClienteId, VehiculoId, Motivo)
-                                VALUES (@Fecha, @Hora, @ClienteId, @VehiculoId, @Motivo)
-                                returning  ""Id"" ";
+                     sql = @"
+                                INSERT INTO public.""TurnoTareas"" (""IdTurno"", ""IdTarea"")
+                                values (@IdTurno, @IdServicio)";
 
-                                    var TurnoId = db.Execute(sql, new
-                                    {
-                                        Fecha = turno.Fecha,
-                                        Hora = turno.Hora,
-                                        ClienteId = turno.Cliente.Id,
-                                        VehiculoId = turno.Vehiculo.Id,
-                                        Motivo = turno.MotivoConsulta
-                                    });
-                }*/
+                    var rowNum = db.Execute(sql, new
+                    {
+                        IdTurno = TurnoId,
+                        IdServicio = servicio.Id
+
+                    });
+                } 
             
                 db.Close();
             //}
@@ -206,5 +207,204 @@ namespace UTNApiTalleres.Data.Repositorio
             
             db.Execute(sql, new { Id = id });
         }
+
+    
+        public async Task<Turno>  GetTurno(int id)
+        {
+
+            using (var db = dbConnection())
+            {
+                /*var sql_query = @"select        t.""Id"" as tuId, t.*,
+                                                v.""Id"" as veId, v.*,
+                                                c.""Id"" as clId, c.*,
+                                                p.""Id"" as peId, p.*
+                                               
+                                              
+                                    from public.""Turnos"" as t
+	                                    inner join public.""Clientes"" as c
+		                                    on t.""IdCliente"" = c.""Id""
+	                                    inner join public.""Vehiculos"" as v
+		                                    on t.""IdVehiculo"" = v.""Id""
+	                                    inner join public.""Personas"" as p
+		                                    on c.""PersonaId"" = p.""Id""
+                                    where t.""Id"" = @Id";*/
+
+                /* var sql_query = @"select      t.""Id"" as tuId, t.""Id"", t.""Fecha"", t.""IdTaller"", t.""IdCliente"", t.""FechaAlta"", t.""UsuarioAlta"", t.""FechaMod"", t.""UsuarioMod"", t.""FechaBaja"", t.""UsuarioBaja"", t.""MotivoCancelacion"", t.""Status"", t.""MotivoConsulta"", t.""IdVehiculo"", t.""Hora"",                                          
+                                               c.""Id"" as clId, c.""Id"", c.""PersonaId"", c.""TallerId"",
+                                               p.""Id"" as peId, p.""Id"", p.""Nombre"", p.""RazonSocial"", p.""Apellido"", p.""FecNacimiento"", p.""IdLocalidad"", p.""Barrio"", p.""Direccion"", p.""NroDireccion"", p.""Dpto"", p.""Piso"", p.""Telcelular"", p.""Telfijo"", p.""Email"", p.""IdTipoIdentificador"", p.""NroIdentificacion"", p.""TipoPersona"", p.""IdGenero"", p.""Ocupacion"", p.""IdEstadoCivil"", p.""FechaAlta"", p.""UsrAlta"", p.""FechaBaja"", p.""UsrBaja"", p.""FechaMod"", p.""UsrMod"",
+                                               v.""Id"" as veId, v.""Id"", v.""IdModelo"", v.""Patente"", v.""Color"", v.""NumeroSerie"", anio, v.""IdCliente"", v.""FechaAlta"", v.""UsrAlta"", v.""FechaMod"", v.""UsrMod"", v.""FechaBaja"", v.""UsrBaja"",
+                                               mv.""Id"" as mvId, mv.""Id"", mv.""IdMarca"", mv.""NombreModelo""
+                                 from public.""Turnos"" as t
+                                     inner join public.""Clientes"" as c
+                                         on t.""IdCliente"" = c.""Id""
+                                     inner join public.""Personas"" as p
+                                         on c.""PersonaId"" = p.""Id""
+                                     inner join public.""Vehiculos"" as v
+                                         on t.""IdVehiculo"" = v.""Id""
+                                     inner join public.""Modelovehiculos"" as mv
+                                         on v.""IdModelo"" = mv.""Id""
+                                 where t.""Id"" = @Id";*/
+
+                var sql_query = @"select    t.""Id"" as tuId, t.""Id"", t.""Fecha"", t.""IdTaller"", t.""IdCliente"", 
+		                                    t.""FechaAlta"", t.""UsuarioAlta"", t.""FechaMod"", t.""UsuarioMod"", 
+		                                    t.""FechaBaja"", t.""UsuarioBaja"", t.""MotivoCancelacion"", t.""Status"", t.""MotivoConsulta"", t.""IdVehiculo"", t.""Hora"",
+		                                    s.""Id"" as sId, s.""Id"", s.""Nombre"", s.""Descripcion"", s.""FechaAlta"", s.""UsuarioAlta"", s.""FechaBaja"", s.""UsuarioBaja"", s.""Duracion_aproximada"", s.""Tipo"", s.""precioCosto"", s.""precioVenta"",	
+	                                        c.""Id"" as clId, c.""Id"", c.""PersonaId"", c.""TallerId"",
+	                                        p.""Id"" as peId, p.""Id"", p.""Nombre"", p.""RazonSocial"", p.""Apellido"", p.""FecNacimiento"", p.""IdLocalidad"", p.""Barrio"", p.""Direccion"", p.""NroDireccion"", p.""Dpto"", p.""Piso"", p.""Telcelular"", p.""Telfijo"", p.""Email"", p.""IdTipoIdentificador"", p.""NroIdentificacion"", p.""TipoPersona"", p.""IdGenero"", p.""Ocupacion"", p.""IdEstadoCivil"", p.""FechaAlta"", p.""UsrAlta"", p.""FechaBaja"", p.""UsrBaja"", p.""FechaMod"", p.""UsrMod"",
+	                                        v.""Id"" as veId, v.""Id"", v.""IdModelo"", v.""Patente"", v.""Color"", v.""NumeroSerie"", anio, v.""IdCliente"", v.""FechaAlta"", v.""UsrAlta"", v.""FechaMod"", v.""UsrMod"", v.""FechaBaja"", v.""UsrBaja"",
+	                                        mv.""Id"" as mvId, mv.""Id"", mv.""IdMarca"", mv.""NombreModelo"",
+                                            ma.""Id"" as maId, ma.""Id"", ma.""Nombre"" 
+                                    from public.""Turnos"" as t
+                                        inner join public.""Clientes"" as c
+                                             on t.""IdCliente"" = c.""Id""
+                                        left join public.""TurnoTareas"" as tt
+                                             on (t.""Id"" = tt.""IdTurno"" and t.""Id"" = tt.""IdTurno"")
+                                        left join public.""Servicios"" as s
+                                             on (tt.""IdTarea"" = s.""Id"")
+                                        inner join public.""Personas"" as p
+                                             on c.""PersonaId"" = p.""Id""
+                                        inner join public.""Vehiculos"" as v
+                                             on t.""IdVehiculo"" = v.""Id""
+                                        inner join public.""Modelovehiculos"" as mv
+                                             on v.""IdModelo"" = mv.""Id""
+                                        inner join public.""Marcavehiculos"" as ma
+                                             on mv.""IdMarca"" = ma.""Id""
+                                    where t.""Id"" = @Id";
+
+                var oTurno = await db.QueryAsync<Turno, Servicio, Cliente, Persona, Vehiculo, Modelovehiculo, Marcavehiculo,  Turno>(
+                   sql_query,
+                   map: (turno, servicio, cliente, persona, vehiculo, modelovehiculo, marcavehiculo) =>
+                   {
+                       if (cliente != null)
+                       {
+                           cliente.Persona = persona;
+                           turno.Cliente = cliente;
+                       }
+
+                       if (vehiculo != null)
+                       {
+                           turno.Vehiculo = vehiculo;   
+                       }
+
+                       if (modelovehiculo != null)
+                       {
+                           turno.Vehiculo.Modelovehiculo = modelovehiculo;  
+                       }
+
+                       if (marcavehiculo != null)
+                       {
+                           turno.Vehiculo.Modelovehiculo.Marcavehiculo = marcavehiculo; 
+                       }
+
+                       if (servicio.Id != 0 )
+                       {
+
+                           if (turno.Servicios == null)
+                           {
+                               turno.Servicios = new List<Servicio>();
+                           }
+
+                           turno.Servicios.Add(servicio) ;
+                       }
+
+
+
+                       return turno;
+                   },
+                   new { Id = id },
+                   splitOn: "sId,clId,peId,veId,mvId,maId"
+
+                   );
+                
+                return oTurno.FirstOrDefault();
+
+            }
+
+        }
+   
+         public async Task<int>  PostRecepcionTurno(Model.RecepcionTurnoDTO recepcionTurno)
+        {
+            int idAltaRecepcion;
+                
+            if (recepcionTurno == null)  
+                return 0;
+
+            var db = dbConnection();
+
+
+            //Dar de alta el Turno
+            /*
+            var sql = @"
+                INSERT INTO public.""TurnoRecepcion"" (""FechaRecepcion"", ""IdCliente"", ""IdVehiculo"", ""Combustible"", ""Kilometraje"", ""IdAseguradora"", ""Inspector"", ""NroSiniestro"", ""Franquicia"", ""Observaciones"", ""UsuarioAlta"", ""FechaAlta"")
+                VALUES (@FechaRecepcion, @IdCliente, @IdVehiculo, @Combustible, @Kilometraje, @IdAseguradora, @Inspector, @NroSiniestro, @Franquicia, @Observaciones, @UsuarioAlta, @FechaAlta)
+                returning  ""Id"" ";
+            */
+            var sql = @"update public.""Turnos""
+                        set ""FechaRecepcion"" = @FechaRecepcion,
+                            ""Combustible"" =  @Combustible,
+                            ""Kilometraje"" =  @Kilometraje, 
+                            ""IdAseguradora""  =  @IdAseguradora, 
+                            ""Inspector""  = @Inspector, 
+                            ""NroSiniestro"" = @NroSiniestro, 
+                            ""Franquicia""    = @Franquicia, 
+                            ""MotivoConsulta"" = @Observaciones,
+                            ""Status"" = @Status
+                        where ""Id"" = @Id
+                        ";
+
+
+            var TurnRecepcionId = await db.ExecuteAsync(sql, new
+            {
+                @Id = recepcionTurno.IdTurno,
+                @FechaRecepcion = recepcionTurno.FechaRecepcion,
+                @Combustible = recepcionTurno.Combustible,
+                @Kilometraje = recepcionTurno.Kilometraje,
+                @IdAseguradora = recepcionTurno.IdAseguradora,
+                @Inspector = recepcionTurno.Inspector, 
+                @NroSiniestro = recepcionTurno.NroSiniestro,
+                @Franquicia = recepcionTurno.Franquicia,
+                @Observaciones = recepcionTurno.Observaciones,
+                @Status = "RECIBIDO"
+
+                /*FechaRecepcion  = recepcionTurno.FechaRecepcion,
+                IdCliente = recepcionTurno.IdCliente,
+                IdVehiculo = recepcionTurno.IdVehiculo,
+                Combustible = recepcionTurno.Combustible,
+                Kilometraje = recepcionTurno.Kilometraje,
+                IdAseguradora = recepcionTurno.IdAseguradora,
+                Inspector = recepcionTurno.Inspector,
+                NroSiniestro = recepcionTurno.NroSiniestro,
+                Franquicia = recepcionTurno.Franquicia,
+                Observaciones = recepcionTurno.Observaciones,
+                UsuarioAlta = "HCELAYA" , 
+                FechaAlta = DateTime.Now*/
+            });
+
+            // Dar de alta los servicios
+            foreach (ItemVentaCreateDTO servicio in recepcionTurno.Servicios)
+            {
+                sql = @"
+                                INSERT INTO public.""TurnoRecepcionTareas"" (""IdTurno"",  ""IdServicio"")
+                                values (@IdTurno,  @IdServicio)";
+
+                var rowNum = db.Execute(sql, new
+                {
+                    IdTurno = recepcionTurno.IdTurno,
+                    IdServicio = servicio.ItemId
+                     
+                });
+            }
+
+            db.Close();
+
+            this._ordenDao.AgregarOrder(recepcionTurno);
+
+            return TurnRecepcionId;
+
+        }
+
+
+       
     }
+
 }

@@ -74,15 +74,10 @@ namespace UTNApiTalleres.Data.Repositorio
         {
 
             var sql_query = @"
-                            SELECT ""Id"", 
-                                    ""Nombre"",
-                                    ""Descripcion"",
-                                    ""UsuarioAlta"",
-                                    ""FechaAlta"",
-                                    ""UsuarioBaja"",
-                                    ""FechaBaja""
-                            FROM public.""Servicios"" 
-                           ";
+                            SELECT  ""Id"", ""Nombre"", ""Descripcion"", 
+                                    ""FechaAlta"", ""UsuarioAlta"", ""FechaBaja"", ""UsuarioBaja"", 
+                                    ""Duracion_aproximada"", ""Tipo"", ""precioCosto"", ""precioVenta""
+                            FROM public.""Servicios""  ";
 
             using (var db = dbConnection())
             {

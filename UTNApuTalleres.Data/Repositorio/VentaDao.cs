@@ -70,7 +70,7 @@ namespace UTNApiTalleres.Data.Repositorio
                                     v.""Id"" as idv, v.*,
     
                                     vd.""Id"" as iddv, vd.""VentaId"", vd.""ServicioId"", vd.""RepuestoId"",
-                                    vd.""Cantidad"", vd.""PrecioUnitario"", vd.""Descuento"", vd.""SubTotal"",
+                                    vd.""Cantidad"", vd.""PrecioUnitario"", vd.""Bonificacion"", vd.""SubTotal"",
     
                                     c.""Id"" as idc, c.*,
                                     p.""Id"" as idp, p.*,
@@ -258,7 +258,7 @@ namespace UTNApiTalleres.Data.Repositorio
                         detalle.VentaId = (int)venta.Id;
                         var detalleQuery = @"
                         INSERT INTO public.""VentaDetalles"" 
-                        (""VentaId"", ""ServicioId"", ""RepuestoId"", ""Cantidad"", ""PrecioUnitario"", ""Descuento"", ""SubTotal"") 
+                        (""VentaId"", ""ServicioId"", ""RepuestoId"", ""Cantidad"", ""PrecioUnitario"", ""Bonificacion"", ""SubTotal"") 
                         VALUES (@VentaId, @ServicioId, @RepuestoId, @Cantidad, @PrecioUnitario, @Descuento, @Subtotal);
                     ";
 
@@ -332,9 +332,19 @@ namespace UTNApiTalleres.Data.Repositorio
             }
         }
 
-        public void CancelarVenta(int id)
+        public int CancelarVenta(int id)
         {
-            new NotImplementedException();
+            var db = dbConnection();
+
+            var sql = @" UPDATE  public.""Ventas"" 
+                         SET ""Estado"" = 'cancelado'
+                         WHERE ""Id"" = @Id";
+
+            var filasAfectadas = db.Execute(sql, new { Id = id });
+
+            db.Close();
+
+            return filasAfectadas;
         }
     }
 }

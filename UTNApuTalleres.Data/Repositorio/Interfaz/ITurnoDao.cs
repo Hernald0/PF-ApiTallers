@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WebApiTalleres.Models;
+ 
 
 namespace UTNApiTalleres.Data.Repositorio.Interfaz
 {
@@ -18,5 +20,9 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
         int CancelarTurno(int id);
 
         int ModificarTurno(Turno turno);
+
+        Task<Turno>  GetTurno(int id);
+
+        Task<int> PostRecepcionTurno(Model.RecepcionTurnoDTO recepcionTurno);
     }
 }

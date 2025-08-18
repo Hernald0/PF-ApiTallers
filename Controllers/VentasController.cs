@@ -91,6 +91,28 @@ namespace UTNApiTalleres.Controllers
             return NoContent();
         }
 
+        [HttpPut("cancelarVenta/{id}")]
+        public ActionResult CancelarVenta(int id)
+        {
+
+            try
+            {
+
+                var resp = _ventaDao.CancelarVenta(id); ;
+
+                if (resp == 0)
+                    return NotFound(new { message = "La venta/presupuesto no fue actualizado." });
+                else
+                    return Ok(new { message = "Quedó cancelado la venta/presupuesto correctamente" });
+
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
     }
 }

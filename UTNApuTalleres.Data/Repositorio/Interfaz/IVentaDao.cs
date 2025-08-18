@@ -21,7 +21,7 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         void DeleteVenta(int id);
 
-        void CancelarVenta(int id);
+        int CancelarVenta(int id);
 
         
 

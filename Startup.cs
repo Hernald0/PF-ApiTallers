@@ -64,6 +64,7 @@ namespace UTNApiTalleres
             services.AddScoped<ITurnoDao, TurnoDao>();
             services.AddScoped<IServRepDao, ServRepDao>();
             services.AddScoped<IVentaDao, VentaDao>();
+            services.AddScoped<IOrdenDao, OrdenDao>();
 
             services.AddSwaggerGen(options =>
             {

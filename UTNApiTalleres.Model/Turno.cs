@@ -17,7 +17,7 @@ namespace WebApiTalleres.Models
 
         public string Status { get; set; }
 
-        public IList<UTNApiTalleres.Model.Servicio> ServiciosElegidos { get; set; }
+        public IList<UTNApiTalleres.Model.Servicio> Servicios { get; set; }
 
         public DateTime Fecha { get; set; }
 

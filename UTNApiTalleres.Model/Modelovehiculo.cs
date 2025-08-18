@@ -9,7 +9,7 @@ namespace WebApiTalleres.Models
     {
         public int? Id { get; set; }    
         
-        public string Nombre { get; set; }
+        public string NombreModelo { get; set; }
 
         public int? IdMarca { get; set; }
 

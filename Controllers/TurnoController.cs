@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
+using UTNApiTalleres.Model;
 using WebApiTalleres.Models;
 
 namespace UTNApiTalleres.Controllers
@@ -105,5 +106,21 @@ namespace UTNApiTalleres.Controllers
             _turnoDao.DeleteTurno(id);
             return Ok();
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTurno(int id)
+        {
+            Turno oTurno = await _turnoDao.GetTurno(id);
+            return Ok( oTurno );
+        }
+
+        [HttpPost("recepcionTurno")]
+        public async Task<IActionResult> PostRecepcionTurno([FromBody] RecepcionTurnoDTO recepcionTurno)
+        {
+            int idRecepcion = await _turnoDao.PostRecepcionTurno(recepcionTurno);
+
+            return Ok(new { id = idRecepcion });
+        }
+
     }
 }

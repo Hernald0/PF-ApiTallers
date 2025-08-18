@@ -7,35 +7,28 @@ using WebApiTalleres.Models;
 
 namespace UTNApiTalleres.Model
 {
-    public class Venta
+    public class Orden
     {
+
         public int Id { get; set; }
 
         public Cliente Cliente { get; set; }
+
+        public Vehiculo Vehiculo { get; set; }
 
         public List<ItemVentaCreateDTO> Items { get; set; }
 
         public string Usuario { get; set; }
 
         public decimal Total { get; set; }
-   
+
         public decimal Descuento { get; set; }
-       
+
         public decimal Iva { get; set; }
 
-        public DateTime FechaEmision { get; set; }
+        public DateTime FechaInicio { get; set; }
 
-        public decimal Efectivo { get; set; }
-        
-        public decimal MontoTotal { get; set; }
-
-        public int nrooperacion { get; set; }
-
-        public decimal cuentaCorriente { get; set; }
-
-        public string tarjetaCredito { get; set; }
-
-        public decimal montoTarjetaCredito { get; set; }
+        public DateTime FechaFin { get; set; }
 
         public string observaciones { get; set; }
 

@@ -9,6 +9,13 @@ namespace UTNApiTalleres.Model
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
+        public string DuracionAproxima { get; set; }
+
+        public string Tipo { get; set; }
+
+        public Decimal PrecioCosto { get; set; }
+
+        public Decimal PrecioVenta { get; set; }
 
         public DateTime FechaAlta { get; set; }
 
