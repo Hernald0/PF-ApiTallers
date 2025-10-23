@@ -10,11 +10,13 @@ namespace UTNApiTalleres.Model
     {
       
 
-        public int IdTurno { get; set; }
+        public int? IdTurno { get; set; }
         public int IdCliente  { get; set; }
         public int IdVehiculo  { get; set; }
 
         public DateTime FechaRecepcion { get; set; }
+
+        public string HoraRecepcion { get; set; }
        
         public int? Combustible { get; set; }
        
@@ -26,7 +28,7 @@ namespace UTNApiTalleres.Model
 
         public int? Franquicia  { get; set; }
         
-        public string? Observaciones  { get; set; }
+        public string? MotivoConsulta { get; set; }
 
         public string? Usuario { get; set; }
 

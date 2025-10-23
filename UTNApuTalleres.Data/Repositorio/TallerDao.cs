@@ -499,14 +499,14 @@ namespace UTNApiTalleres.Data.Repositorio
 
             using (var db = dbConnection())
             { 
-                var sql_query = @"select   ve.""Id"" as veId, 
+                var sql_query = @"select   ve.""Id"" as Id, 
 	                                       ve.""Patente"",
 	                                       ve.""Color"",
 	                                       ve.""NumeroSerie"",
 	                                       ve.""anio"",
-	                                       mv.""Id"" as mvId,
-	                                       mv.""Nombre"",
-	                                       mav.""Id"" as mavId,
+	                                       mv.""Id"" as Id,
+	                                       mv.""NombreModelo"",
+	                                       mav.""Id"" as Id,
 	                                       mav.""Nombre""
                                     from public.""Vehiculos"" as ve
 	                                     left join public.""Modelovehiculos"" mv
@@ -531,7 +531,7 @@ namespace UTNApiTalleres.Data.Repositorio
                                                  }; return vehiculo;
                                              },
                                              new { Id = idVehiculo },
-                                             splitOn: "veId,mvId,mavId").ConfigureAwait(false);
+                                             splitOn: "Id,Id").ConfigureAwait(false);
 
                
                 return (Vehiculo) oVehiculo.FirstOrDefault();

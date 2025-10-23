@@ -46,67 +46,13 @@ namespace UTNApiTalleres.Controllers
             return Ok(oOrden);
         }
 
-        /* GET: OrdersController/Create
-        public ActionResult Create()
+        [HttpPost("postOrden")]
+        public async Task<IActionResult> postOrden([FromBody] RecepcionTurnoDTO orden)
         {
-            return Ok();
+            var oOrden = await _orderDao.AgregarOrder(null, orden);
+            return Ok(oOrden);
         }
 
-        // POST: OrdersController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return Ok();
-            }
-        }
-
-        // GET: OrdersController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return Ok();
-        }
-
-        // POST: OrdersController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return Ok();
-            }
-        }
-
-        // GET: OrdersController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return Ok();
-        }
-
-        // POST: OrdersController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return Ok();
-            }
-        }*/
+      
     }
 }

@@ -13,7 +13,7 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         Task<IEnumerable<Orden>> GetOrders();
 
-        Task<int> AgregarOrder(RecepcionTurnoDTO orden);
+        Task<int> AgregarOrder(int? RecepcionId, RecepcionTurnoDTO orden);
 
         void ModificarOrder(Orden orden);
 

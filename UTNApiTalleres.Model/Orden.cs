@@ -30,7 +30,18 @@ namespace UTNApiTalleres.Model
 
         public DateTime FechaFin { get; set; }
 
-        public string observaciones { get; set; }
+        public int? Combustible { get; set; }
+
+        public int? Kilometraje { get; set; }
+        public int? IdAseguradora { get; set; }
+        public string? Inspector { get; set; }
+
+        public string? NroSiniestro { get; set; }
+
+        public int? Franquicia { get; set; }
+
+        public string? MotivoConsulta { get; set; }
+
 
         public string estado { get; set; }
     }

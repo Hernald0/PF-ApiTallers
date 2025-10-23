@@ -12,7 +12,7 @@ namespace UTNApiTalleres.Model
       
         public int? VentaId { get; set; }
 
-        public int ItemId { get; set; }
+        public int? ItemId { get; set; }
         /*
       public string? Nombre { get; set; }
 

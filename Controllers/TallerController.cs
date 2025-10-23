@@ -147,7 +147,7 @@ namespace UTNApiTalleres.Controllers
         }
 
         [HttpGet()]
-        [Route("Vehiculo")]
+        [Route("Vehiculo/{idVehiculo:int}")]
         public async Task<IActionResult> getVehiculo(int idVehiculo)
         {
 
