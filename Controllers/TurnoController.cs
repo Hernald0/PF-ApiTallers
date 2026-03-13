@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using UTNApiTalleres.Model;
 using WebApiTalleres.Models;
 
 namespace UTNApiTalleres.Controllers
@@ -36,6 +35,24 @@ namespace UTNApiTalleres.Controllers
                 return StatusCode(500, ex.Message);
             }
             
+        }
+
+        [HttpGet("turnosAllCalendar")]
+        public async Task<ActionResult> GetTurnosCalendar()
+        {
+            try
+            {
+                var turnos = await _turnoDao.GetTurnosCalendar();
+
+                return Ok(turnos);
+
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
         }
 
         [HttpGet("slots-disponibles")]

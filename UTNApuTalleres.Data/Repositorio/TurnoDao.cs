@@ -6,8 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using UTNApiTalleres.Model;
 using WebApiTalleres.Models;
+using UTNApiTalleres.Application.DTOs;
+
 
 namespace UTNApiTalleres.Data.Repositorio
 {
@@ -30,6 +31,39 @@ namespace UTNApiTalleres.Data.Repositorio
         {
             return new NpgsqlConnection(this._connectionString.ConnectionString);
         }
+
+        public async Task<IEnumerable<TurnosCalendarDTO>> GetTurnosCalendar()
+        {
+
+            using (var db = dbConnection())
+            {
+                var sql_query = @"select  ' Recepción ' as title,  
+		                            TO_CHAR(""Fecha"" + ""Hora"", 'YYYY-MM-DD""T""HH24:MI:SS') AS start,
+		                            TO_CHAR(""Fecha"" + ""Hora"", 'YYYY-MM-DD""T""HH24:MI:SS') AS end,
+		                            'Recepción del vehículo: '|| v.""Patente"" || ' - Cliente: ' || 
+		                             CASE 
+                                        WHEN p.""TipoPersona"" = 'F' THEN p.""Nombre"" || ' ' || p.""Apellido""
+                                        WHEN p.""TipoPersona"" = 'J' THEN p.""RazonSocial""
+                                    END AS description  
+                            from public.""Turnos"" t
+	                            left join public.""Vehiculos"" v
+		                            on t.""IdVehiculo"" = v.""Id""
+	                            left join public.""Clientes"" c
+		                            on t.""IdCliente"" = c.""Id""
+	                            left join public.""Personas"" p
+		                            on c.""PersonaId"" = p.""Id""
+                            where ""Status"" = 'reservado'
+                            and DATE_TRUNC('month', ""Fecha"") = DATE_TRUNC('month', CURRENT_DATE)";
+
+                var turnosCalendar = await db.QueryAsync<TurnosCalendarDTO>(sql_query);
+
+
+                return turnosCalendar;
+
+
+            }
+        }
+
 
         public async Task<IEnumerable<Turno>> GetTurnos()
         {
@@ -85,11 +119,11 @@ namespace UTNApiTalleres.Data.Repositorio
 
             var command = @"SELECT * FROM public.""Diaslaborales"" WHERE ""dia_semana"" = @DayOfWeek";
 
-            var workingDay = db.QueryFirstOrDefault<Model.DiaLaboral>(command, new { DayOfWeek = dayOfWeek });
+            var workingDay = db.QueryFirstOrDefault<DiaLaboral>(command, new { DayOfWeek = dayOfWeek });
 
             var command2 = @"SELECT * FROM public.""Feriados"" WHERE ""dia_feriado"" = @Date";
 
-            if (workingDay == null || db.QueryFirstOrDefault<Model.Feriado>(command2, new { Date = Fecha }) != null)
+            if (workingDay == null || db.QueryFirstOrDefault<Feriado>(command2, new { Date = Fecha }) != null)
             {
                 return Enumerable.Empty<TimeSpan>();
             }
@@ -133,8 +167,8 @@ namespace UTNApiTalleres.Data.Repositorio
                 //Dar de alta el Turno
 
                 var sql = @"
-                INSERT INTO public.""Turnos"" (""Fecha"", ""Hora"", ""IdCliente"", ""IdVehiculo"", ""MotivoConsulta"", ""Status"")
-                VALUES (@Fecha, @Hora, @IdCliente, @IdVehiculo, @MotivoConsulta, @Status)
+                INSERT INTO public.""Turnos"" (""Fecha"", ""Hora"", ""IdCliente"", ""IdVehiculo"", ""MotivoConsulta"", ""Status"", ""UsuarioAlta"",""FechaAlta"")
+                VALUES (@Fecha, @Hora, @IdCliente, @IdVehiculo, @MotivoConsulta, @Status, @UsuarioAlta, @FechaAlta)
                 returning  ""Id"" ";
             
                 var TurnoId = await db.QuerySingleAsync<int>(sql, new { Fecha = turno.Fecha, 
@@ -142,8 +176,10 @@ namespace UTNApiTalleres.Data.Repositorio
                                                     IdCliente = turno.Cliente.Id,
                                                     IdVehiculo = vehiculo.Id,
                                                     MotivoConsulta = turno.MotivoConsulta,
-                                                    Status = "reservado"
-                 });
+                                                    Status = "reservado",
+                                                    UsuarioAlta = turno.Usuario,
+                                                    FechaAlta = DateTime.Now
+                 });;
 
                 // Dar de alta los servicios
                 foreach (Servicio servicio in turno.Servicios)
@@ -256,7 +292,7 @@ namespace UTNApiTalleres.Data.Repositorio
         }
         public async Task<Turno> GetTurno(int id)
         {
-
+            
             var sql_recepcion = @"select  t.""Id"" as tuId, t.""Id"", t.""FechaRecepcion"",  t.""IdCliente"", 
 		                                            t.""FechaRecepcion"", t.""HoraRecepcion"", t.""Combustible"", t.""Kilometraje"", t.""IdAseguradora"", t.""Inspector"", t.""NroSiniestro"", t.""Franquicia"", t.""MotivoConsulta"",	  
 		                                             t.""MotivoConsulta"", t.""IdVehiculo"", t.""HoraRecepcion"",
@@ -270,7 +306,7 @@ namespace UTNApiTalleres.Data.Repositorio
 	                                            inner join public.""Clientes"" as c
 		                                             on t.""IdCliente"" = c.""Id""
 	                                            left join public.""RecepcionTareas"" as tt
-		                                             on (t.""IdTurno"" = tt.""IdTurno"")
+		                                             on (t.""Id"" = tt.""IdRecepcion"")
 	                                            left join public.""Servicios"" as s
 		                                             on (tt.""IdServicio"" = s.""Id"")
 	                                            inner join public.""Personas"" as p
@@ -282,6 +318,8 @@ namespace UTNApiTalleres.Data.Repositorio
 	                                            inner join public.""Marcavehiculos"" as ma
 		                                             on mv.""IdMarca"" = ma.""Id""
                                             where t.""IdTurno""  = @Id";
+          
+          
 
             var sql_turno = @"select      t.""Id"" as tuId, t.""Id"", t.""Fecha"", t.""IdTaller"", t.""IdCliente"", 
 		                                            t.""FechaAlta"", t.""UsuarioAlta"", t.""FechaMod"", t.""UsuarioMod"", 
@@ -320,7 +358,7 @@ namespace UTNApiTalleres.Data.Repositorio
             if (existeRecepcion > 0)
             {
                 // Si existe Recepcion, traemos TurnoRecepcion
-                var turnoRecepcion = await db.QueryAsync<TurnoRecepcion, Servicio, Cliente, Persona, Vehiculo, Modelovehiculo, Marcavehiculo, TurnoRecepcion>(
+                var turnoRecepcion = await db.QueryAsync<TurnoRecepcion, Servicio,  Cliente, Persona, Vehiculo, Modelovehiculo, Marcavehiculo, TurnoRecepcion>(
                     sql_recepcion,
                     map: (turno, servicio, cliente, persona, vehiculo, modelovehiculo, marcavehiculo) =>
                     {
@@ -352,6 +390,9 @@ namespace UTNApiTalleres.Data.Repositorio
         }
 
 
+   
+
+
         public async Task<Turno>  GetTurnoOriginal(int id)
         {
 
@@ -372,7 +413,7 @@ namespace UTNApiTalleres.Data.Repositorio
 	                                            inner join public.""Clientes"" as c
 		                                             on t.""IdCliente"" = c.""Id""
 	                                            left join public.""RecepcionTareas"" as tt
-		                                             on (t.""IdTurno"" = tt.""IdTurno"")
+		                                             on (t.""Id"" = tt.""IdRecepcion"")
 	                                            left join public.""Servicios"" as s
 		                                             on (tt.""IdServicio"" = s.""Id"")
 	                                            inner join public.""Personas"" as p
@@ -546,7 +587,7 @@ namespace UTNApiTalleres.Data.Repositorio
 
         }
    
-         public async Task<int>  PostRecepcionTurno(Model.RecepcionTurnoDTO recepcionTurno)
+         public async Task<int>  PostRecepcionTurno(RecepcionTurnoDTO recepcionTurno)
         {
             int idAltaRecepcion;
                 
@@ -582,24 +623,26 @@ namespace UTNApiTalleres.Data.Repositorio
                 NroSiniestro = recepcionTurno.NroSiniestro,
                 Franquicia = recepcionTurno.Franquicia,
                 MotivoConsulta = recepcionTurno.MotivoConsulta,
-                UsuarioAlta = "HCELAYA" , 
+                UsuarioAlta = recepcionTurno.Usuario, 
                 FechaAlta = DateTime.Now
             });
-
+          
             // Dar de alta los servicios
             foreach (ItemVentaCreateDTO servicio in recepcionTurno.Servicios)
             {
                 sql = @"
-                                INSERT INTO public.""RecepcionTareas"" (""IdTurno"",  ""IdServicio"")
-                                values (@IdTurno,  @IdServicio)";
+                                INSERT INTO public.""RecepcionTareas"" (""IdRecepcion"",  ""IdServicio"", ""Tipo"")
+                                values (@IdRecepcion,  @IdServicio, @Tipo )";
 
                 var rowNum = db.Execute(sql, new
                 {
-                    IdTurno = recepcionTurno.IdTurno,
-                    IdServicio = servicio.ItemId
+                    //IdTurno = recepcionTurno.IdTurno,
+                    IdRecepcion = RecepcionId,
+                    IdServicio = servicio.ItemId,
+                    Tipo = servicio.Tipo
                      
                 });
-            }
+            } 
 
 
             if (recepcionTurno.IdTurno > 0)

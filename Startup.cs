@@ -1,3 +1,5 @@
+using UTNApiTalleres.Application.Interfaces;
+using UTNApiTalleres.Application.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +10,11 @@ using System;
 using UTNApiTalleres.Data;
 using UTNApiTalleres.Data.Repositorio;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using WebApiTalleres.Models;
+using UTNApiTalleres.Infrastructure.Repositories.Interface;
+using UTNApiTalleres.Infrastructure.Repositories;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 
 namespace UTNApiTalleres
 {
@@ -32,6 +38,8 @@ namespace UTNApiTalleres
                            .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
                            .AddEnvironmentVariables();
 
+       
+
             Configuration = builder.Build();
         }
 
@@ -40,6 +48,21 @@ namespace UTNApiTalleres
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                        .AddCookie(options =>
+                        {
+                            options.LoginPath = "/api/auth/login";
+                            options.AccessDeniedPath = "/api/auth/denied";
+                            options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                            options.Cookie.Name = ".AspNetCore.Cookies";
+                            options.Cookie.SameSite = SameSiteMode.Lax;// SameSiteMode.None;                           
+                            options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; //CookieSecurePolicy.Always; 
+                            options.Cookie.HttpOnly = true;
+
+                        });
+
+            services.AddAuthorization();
+
             services.AddControllers();
 
             services.AddControllers().AddNewtonsoftJson(x =>
@@ -49,9 +72,12 @@ namespace UTNApiTalleres
             /*Environment.GetEnvironmentVariable("DATABASE_PUBLIC_URL")
                                ?? Configuration.GetConnectionString("PostgreSQLConnection");*/
 
+         
+
             var postgresConfiguration = new PostgresqlConfiguration(connectionString);
             services.AddSingleton(postgresConfiguration);
 
+        
             services.AddScoped<IAseguradoraDao, AseguradoraDao>();
             services.AddScoped<IClienteDao, ClienteDao>();
             services.AddScoped<IPersonaDao, PersonaDao>();
@@ -65,6 +91,15 @@ namespace UTNApiTalleres
             services.AddScoped<IServRepDao, ServRepDao>();
             services.AddScoped<IVentaDao, VentaDao>();
             services.AddScoped<IOrdenDao, OrdenDao>();
+            services.AddScoped<IUsuarioDao, UsuarioDao>();
+            services.AddScoped<IRolDao, RolDao>();
+            services.AddScoped<IAccesoDao, AccesoDao>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IRolService, RolService>();
+            services.AddScoped<IRolRepository, RolRepository>();
+            services.AddScoped<IRolAccesoRepository, RolAccesoRepository>();
+            services.AddScoped<IRolAccesoPermisoRepository, RolAccesoPermisoRepository>();
 
             services.AddSwaggerGen(options =>
             {
@@ -79,18 +114,28 @@ namespace UTNApiTalleres
 
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(builder =>
+                /*options.AddDefaultPolicy(builder =>
                 {
                     builder.AllowAnyOrigin()
                            .AllowAnyMethod()
                            .AllowAnyHeader();
+                });*/
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200") // tu frontend
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials();
                 });
+
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            app.UseCors("CorsPolicy");
             //if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -98,13 +143,15 @@ namespace UTNApiTalleres
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "UTNApiTalleres v1"));
             }
 
-            app.UseCors();
+       
 
             // Comment or remove the line below if HTTPS redirection is causing issues in production
             // app.UseHttpsRedirection();
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

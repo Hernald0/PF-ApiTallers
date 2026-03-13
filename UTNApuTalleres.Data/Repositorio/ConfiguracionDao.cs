@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using UTNApiTalleres.Model;
+using WebApiTalleres.Models;
 
 namespace UTNApiTalleres.Data.Repositorio
 {

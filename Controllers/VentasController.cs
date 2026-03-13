@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using UTNApiTalleres.Model;
+using WebApiTalleres.Models;
 
 namespace UTNApiTalleres.Controllers
 {
@@ -47,6 +47,15 @@ namespace UTNApiTalleres.Controllers
                 return NotFound();
 
             return Ok(venta);
+        }
+
+        [HttpPost("postVentaOrden")]
+        public ActionResult postVentaOrden([FromBody] OrdenDTO orden)
+        {
+
+            // Venta venta = (Venta) await _ventaDao.AgregarVentaOrden(orden);
+            //return CreatedAtAction(nameof(Get), new { id = venta.Id }, venta);
+            return null;
         }
 
         [HttpPost]

@@ -17,9 +17,12 @@ namespace UTNApiTalleres.Data.Repositorio
         private PostgresqlConfiguration _connectionString;
 
 
+
+
         public PersonaDao(PostgresqlConfiguration connectionString)
         {
             this._connectionString = connectionString;
+       
         }
 
         protected NpgsqlConnection dbConnection()
@@ -27,6 +30,28 @@ namespace UTNApiTalleres.Data.Repositorio
             return new NpgsqlConnection(this._connectionString.ConnectionString);
         }
 
+
+        public async Task<bool> existePersona(vmIdentificador identificador)
+        {
+            var db = dbConnection();
+
+            var sql_count = @"select count(*) from public.""Personas""
+                                where ""NroIdentificacion"" = @nro
+                                and ""IdTipoIdentificador"" = @tipo";
+
+            int cantidad = await db.QuerySingleAsync<int>(sql_count, new
+            {
+                nro = identificador.NroIdentificacion,
+                tipo = identificador.TipoIdentificador
+            });
+
+            return (cantidad>0); 
+
+        }
+
+        
+
+        
         public  async Task<int> create(Persona persona)
         {
             var db = dbConnection();
@@ -122,13 +147,12 @@ namespace UTNApiTalleres.Data.Repositorio
             parameters.Add("NroIdentificacion", persona.NroIdentificacion, DbType.Int32);
             parameters.Add("TipoPersona", persona.TipoPersona, DbType.String);
             //var genero = (persona.Genero.Id null ? SqlInt32.Null : persona.Genero.Id);
-            parameters.Add("IdGenero", 
-                         persona.Genero.Id, 
-                        DbType.Int32);
+           
+            parameters.Add("IdGenero", persona.Genero?.Id, DbType.Int32);
             parameters.Add("Ocupacion", persona.Ocupacion, DbType.String);
             //var EstadoCivil = (persona.EstadoCivil.Id null ? SqlInt32.Null : persona.EstadoCivil.Id);
             parameters.Add("IdEstadoCivil", 
-                        persona.EstadoCivil.Id, 
+                        persona.EstadoCivil?.Id, 
                         DbType.Int32);
             //parameters.Add("FechaAlta", persona.FechaAlta, DbType.DateTime);
             //parameters.Add("UsrAlta", persona.UsrAlta, DbType.String);
@@ -311,7 +335,7 @@ namespace UTNApiTalleres.Data.Repositorio
 
         }
 
-        public async Task<Persona> find(int id)
+        public async Task<Persona> find(int? id)
         {
             /*
             var db = dbConnection();
@@ -326,44 +350,50 @@ namespace UTNApiTalleres.Data.Repositorio
 
             return oPersona;
             */
-            var sql = @" SELECT ""Id"",   
-		                                    ""Nombre"", 
-		                                    ""RazonSocial"", 
-		                                    ""Apellido"", 
-		                                    ""FecNacimiento"", 
-		                                    ""IdLocalidad"", 
-		                                    ""Barrio"", 
-		                                    ""Direccion"", 
-		                                    ""NroDireccion"", 
-		                                    ""Dpto"", 
-		                                    ""Piso"", 
-		                                    ""Telcelular"", 
-		                                    ""Telfijo"", 
-		                                    ""Email"", 
-		                                    ""IdTipoIdentificador"", 
-		                                    ""NroIdentificacion"", 
-		                                    ""TipoPersona"", 
-		                                    ""IdGenero"", 
-		                                    ""Ocupacion"", 
-		                                    ""IdEstadoCivil"", 
-		                                    ""FechaAlta"", 
-		                                    ""UsrAlta"", 
-		                                    ""FechaBaja"", 
-		                                    ""UsrBaja"", 
-		                                    ""FechaMod"", 
-		                                    ""UsrMod""
-		                         FROM public.""Personas""
-		                         WHERE  ""Id"" = @Id
-                                 ORDER BY ""Id"" desc";
 
-            using (var connection = dbConnection())
-            {
-                var oPersona =  await connection.QuerySingleOrDefaultAsync<Persona>(sql, new { Id = id });
+            if (id != null)
+            { 
 
-                return oPersona;
+                    var sql = @" SELECT ""Id"",   
+		                                            ""Nombre"", 
+		                                            ""RazonSocial"", 
+		                                            ""Apellido"", 
+		                                            ""FecNacimiento"", 
+		                                            ""IdLocalidad"", 
+		                                            ""Barrio"", 
+		                                            ""Direccion"", 
+		                                            ""NroDireccion"", 
+		                                            ""Dpto"", 
+		                                            ""Piso"", 
+		                                            ""Telcelular"", 
+		                                            ""Telfijo"", 
+		                                            ""Email"", 
+		                                            ""IdTipoIdentificador"", 
+		                                            ""NroIdentificacion"", 
+		                                            ""TipoPersona"", 
+		                                            ""IdGenero"", 
+		                                            ""Ocupacion"", 
+		                                            ""IdEstadoCivil"", 
+		                                            ""FechaAlta"", 
+		                                            ""UsrAlta"", 
+		                                            ""FechaBaja"", 
+		                                            ""UsrBaja"", 
+		                                            ""FechaMod"", 
+		                                            ""UsrMod""
+		                                 FROM public.""Personas""
+		                                 WHERE  ""Id"" = @Id
+                                         ORDER BY ""Id"" desc";
+
+                    using (var connection = dbConnection())
+                    {
+                        var oPersona =  await connection.QuerySingleOrDefaultAsync<Persona>(sql, new { Id = id });
+
+                        return oPersona;
                 
+                    }
+                    
             }
-           
+            else { return null;  }
         }
 
         public async Task<IEnumerable<Persona>> findAll()

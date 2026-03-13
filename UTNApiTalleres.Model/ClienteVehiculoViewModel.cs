@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using WebApiTalleres.Models;
 
-namespace UTNApiTalleres.Model
+namespace WebApiTalleres.Models
 {
     public class ClienteVehiculoViewModel
     {

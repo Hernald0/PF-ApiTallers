@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UTNApiTalleres.Model
+namespace WebApiTalleres.Models
 {
     public class vwConfigPopUp
     {

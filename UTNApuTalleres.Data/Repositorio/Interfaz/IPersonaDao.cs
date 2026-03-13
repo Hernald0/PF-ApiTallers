@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System;
 using WebApiTalleres.Models;
+ 
 
 namespace UTNApiTalleres.Data.Repositorio.Interfaz
 {
@@ -18,12 +19,14 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
         Task<bool> delete(int id);
 
         //recuperar un objeto desde la base        
-        Task<Persona> find(int id);
+        Task<Persona> find(int? id);
 
         Task<Persona> find2(int id);
 
         //recuperar todos los objetos desde la base
         Task<IEnumerable<Persona>> findAll();
+
+     
 
 
     }

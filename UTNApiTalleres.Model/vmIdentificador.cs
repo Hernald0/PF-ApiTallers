@@ -1,8 +1,9 @@
-﻿namespace UTNApiTalleres.Model
+﻿namespace WebApiTalleres.Models
 {
     public class vmIdentificador
     {
         public int TipoIdentificador { get; set; }
-        public int NroIdentificacion { get; set; }
+
+        public string NroIdentificacion { get; set; }
     }
 }

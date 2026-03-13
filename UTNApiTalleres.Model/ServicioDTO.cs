@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UTNApiTalleres.Model
+namespace WebApiTalleres.Models
 {
     public class ServicioDTO
     {

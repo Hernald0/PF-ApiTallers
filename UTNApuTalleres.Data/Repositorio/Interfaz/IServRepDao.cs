@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using UTNApiTalleres.Model;
+using WebApiTalleres.Models;
 
 namespace UTNApiTalleres.Data.Repositorio.Interfaz
 {
@@ -18,7 +18,7 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         #endregion
 
-        Task<IEnumerable<ItemVentaDTO>> FindFilterServRep(string pBusqueda);
+        Task<IEnumerable<ItemVentaDTO>> FindFilterServRep(string pBusqueda, string? pTipo);
 
     }
 }

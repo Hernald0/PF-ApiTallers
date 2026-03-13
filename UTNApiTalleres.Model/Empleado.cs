@@ -9,7 +9,7 @@ namespace WebApiTalleres.Models
     {
         public int Id { get; set; }
         public Persona Persona { get; set; }
-        //public int? IdTaller { get; set; }
-
+        
+        public Usuario? Usuario { get; set; }
     }
 }

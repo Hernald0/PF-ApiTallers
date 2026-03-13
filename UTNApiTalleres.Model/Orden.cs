@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApiTalleres.Models;
 
-namespace UTNApiTalleres.Model
+namespace WebApiTalleres.Models
 {
     public class Orden
     {
@@ -26,9 +26,11 @@ namespace UTNApiTalleres.Model
 
         public decimal Iva { get; set; }
 
-        public DateTime FechaInicio { get; set; }
+        public DateTime? FechaRecepcion { get; set; }
 
-        public DateTime FechaFin { get; set; }
+        public DateTime? FechaInicio { get; set; }
+
+        public DateTime? FechaFin { get; set; }
 
         public int? Combustible { get; set; }
 
@@ -42,7 +44,16 @@ namespace UTNApiTalleres.Model
 
         public string? MotivoConsulta { get; set; }
 
+        public string? ObservacionTecnico { get; set; }
 
-        public string estado { get; set; }
+        public int? IdTurno { get; set; }
+
+        public int? IdRecepcion { get; set; }
+
+        public int? VentaId { get; set; }
+
+        public int? IdEmpleadoAsignado { get; set; }
+
+        public int? Estado { get; set; }
     }
 }

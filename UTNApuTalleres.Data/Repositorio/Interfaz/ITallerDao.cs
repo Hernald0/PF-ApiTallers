@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System;
 using WebApiTalleres.Models;
-using UTNApiTalleres.Model;
+ 
 
 namespace UTNApiTalleres.Data.Repositorio.Interfaz
 {
@@ -24,7 +24,9 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
         //recuperar todos los objetos desde la base
         Task<IEnumerable<Taller>> findAll();
 
-        Task<IEnumerable<Empleado>> findEmpleadoAll(int id);
+        Task<Empleado> findEmpleado(int id);
+
+        Task<IEnumerable<Empleado>> findEmpleados(int? id);
 
         Task<bool> createEmpleado(Empleado empleado);
 
@@ -43,7 +45,9 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         Task<Vehiculo> getVehiculo(int idVehiculo);
 
-    
+        Task<Empleado> EmpleadoByPersonaIdAsync(int? id);
+
+        Task<object> ValidarPersonaAsync(vmIdentificador pvmIdentificador, string tipo);
 
 
     }

@@ -4,7 +4,7 @@ using System.Text;
 using Npgsql;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using UTNApiTalleres.Model;
+using WebApiTalleres.Models;
 using Dapper;
 using System.Linq;
 using System.Data;

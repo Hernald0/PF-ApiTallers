@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using UTNApiTalleres.Model;
+
 using WebApiTalleres.Models;
 using Npgsql;
 using Dapper;
+using WebApiTalleres.Models.Enum;
+using UTNApiTalleres.Model;
 
 namespace UTNApiTalleres.Data.Repositorio
 {
@@ -33,22 +35,34 @@ namespace UTNApiTalleres.Data.Repositorio
             var db = dbConnection();
 
             var sql = @"
-                    INSERT INTO public.""Ordenes""(""IdTurno"", ""IdCliente"", ""IdVehiculo"",""IdRecepcion"")
-	                VALUES(@IdTurno, @IdCliente, @IdVehiculo, @IdRecepcion)  
+                    INSERT INTO public.""Ordenes""(""IdTurno"", ""IdCliente"", ""IdVehiculo"",""IdRecepcion"", ""Estado"",""IdEmpleadoAsignado"",""Usuario"")
+	                VALUES(@IdTurno, @IdCliente, @IdVehiculo, @IdRecepcion, @Estado, @IdEmpleadoAsignado, @Usuario)  
                     returning  ""Id""";
+
+            Empleado oEmpleado = getAsignarEmpleado();
 
             var orderId = await  db.QuerySingleAsync<int>(sql, new
             {
                 @IdTurno = orden.IdTurno,
                 @IdCliente = orden.IdCliente,
                 @IdVehiculo = orden.IdVehiculo,
-                @IdRecepcion = RecepcionId
+                @IdRecepcion = RecepcionId,
+                @Estado = EstadoOrden.ADiagnosticar,
+                @IdEmpleadoAsignado = oEmpleado.Id,
+                @Usuario = orden.Usuario
 
             });
 
-            foreach (ItemVentaCreateDTO s in orden.Servicios)
-            {
-                var sqlDetalle = @"INSERT INTO public.""OrdenDetalles""
+            AgregarDetalles(orderId, orden.Servicios);
+
+            return orderId;
+        }
+
+        private void AgregarDetalles(int? orderId, List<ItemVentaCreateDTO> Servicios)
+        {
+            var db = dbConnection();
+
+            var sqlDetalle = @"INSERT INTO public.""OrdenDetalles""
                                     (""OrdenId"", 
                                      ""ServicioId"", 
                                      ""RepuestoId"",  
@@ -67,12 +81,18 @@ namespace UTNApiTalleres.Data.Repositorio
                                    );
                 ";
 
+            foreach (ItemVentaCreateDTO s in Servicios)
+            {
+
+
                 var orderDetalleId = db.Execute(sqlDetalle, new
                 {
-                                  
+
                     @OrdenId = orderId,
-                    @ServicioId = (s.Tipo == "servicio" ? s.ItemId : null), 
-                    @RepuestoId = (s.Tipo == "respuesto" ? s.ItemId : null),
+                    //@ServicioId = (s.Tipo == "servicio" ? s.ItemId : null),
+                    //@RepuestoId = (s.Tipo == "respuesto" ? s.ItemId : null),
+                    @ServicioId = s.ServicioId,
+                    @RepuestoId = s.RepuestoId,
                     @PrecioUnitario = s.PrecioUnitario,
                     @Bonificacion = s.Bonificacion,
                     @Cantidad = s.Cantidad,
@@ -80,10 +100,7 @@ namespace UTNApiTalleres.Data.Repositorio
 
                 });
 
-
             }
-
-            return orderId;
         }
 
         public int CancelarOrder(int id)
@@ -96,18 +113,24 @@ namespace UTNApiTalleres.Data.Repositorio
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Orden>> GetOrders()
+        public async Task<IEnumerable<Orden>> GetOrdenes(string rol, int? idEmpleado)
         {
-            var sql_query = @" select      o.""Id"" as ido, o.*,
-	  	                                        c.""Id"" as idc, c.*, 
-	  	                                        p.""Id"" as idp, p.* 
-                                        from public.""Ordenes"" as o 
-
-                                            inner join public.""Clientes"" as c
-                                        on o.""IdCliente"" = c.""Id""
-
-                                            inner join public.""Personas"" as p
-                                        on c.""PersonaId"" = p.""Id""";
+            var sql_query = @" select      o.""Id"" as ido, o.*, rv.""FechaRecepcion"",
+			                                c.""Id"" as idc, c.*, 
+			                                p.""Id"" as idp, p.* 
+	                                from public.""Ordenes"" as o 
+		                                inner join public.""RecepcionVehiculo"" rv
+			                                on o.""IdRecepcion"" = rv.""Id""
+		                                inner join public.""Clientes"" as c
+	                                on o.""IdCliente"" = c.""Id""
+		                                inner join public.""Personas"" as p
+	                                on c.""PersonaId"" = p.""Id""
+                                   where (@Rol IN ('Administrador','Jefe de Taller'))
+                                           OR
+                                         (@Rol NOT IN ('Administrador','Jefe de Taller','Administrativo') and o.""IdEmpleadoAsignado"" = @IdEmpleado)
+                                           or 
+                                         (@Rol IN ('Administrativo') and (o.""Estado"" IN ( @Estado, @Estado1)) )
+                                   order by o.""Id"" desc";
 
 
 
@@ -123,6 +146,11 @@ namespace UTNApiTalleres.Data.Repositorio
 
                                     return orden;
                                 },
+                                param: new { Rol = rol,
+                                             IdEmpleado = idEmpleado,
+                                             Estado = EstadoOrden.EsperaConfirmacion,
+                                             Estado1 = EstadoOrden.Finalizado
+                                },
                                 splitOn: "idc, idp"
                             );
 
@@ -132,10 +160,194 @@ namespace UTNApiTalleres.Data.Repositorio
 
             }
         }
-
-        public void ModificarOrder(Orden orden)
+        public int UpdateVentaId(int? OrdenId, int? VentaId)
         {
-            throw new NotImplementedException();
+            using (var db = dbConnection())
+            {
+
+                {
+                    var query = @"
+                    UPDATE public.""Ordenes"" 
+                    SET   
+                        
+	                    ""VentaId"" = @VentaId,
+                       
+                    WHERE ""Id"" = @Id;
+                ";
+                 
+
+                 return   db.Execute(query, new
+                    {
+                        @Id = OrdenId,
+                        @VentaId = VentaId,
+                         
+                    });
+
+                   
+                }
+            }
+        }
+        public  void ModificarOrder(OrdenDTO orden)
+        {
+            using ( var db = dbConnection())
+            {
+                 
+                {
+                    var query = @"
+                    UPDATE public.""Ordenes"" 
+                    SET   
+                        
+	                    ""Usuario"" = @Usuario,
+                        ""FechaInicio"" = @FechaInicio, 
+	                    ""FechaFin"" = @FechaFin, 	                
+                        ""Estado"" = @Estado,
+                        ""IdEmpleadoAsignado"" = @IdEmpleadoAsignado,                                            
+		                ""ObservacionTecnico"" = @ObservacionTecnico
+                    WHERE ""Id"" = @Id;
+                ";
+                    /*, 
+	                    
+                    */
+
+                    db.Execute(query, new
+                    {   
+                        @Id = orden.IdOrden,
+                        @FechaInicio = orden.FechaInicio,
+                        @FechaFin = orden.FechaFin,
+                        @IdEmpleadoAsignado = orden.IdEmpleadoAsignado,
+                        @Estado = orden.Estado,
+                        @Usuario = orden.Usuario,
+                        @ObservacionTecnico = orden.ObservacionTecnico
+                     });
+
+                    var deleteDetallesQuery = "DELETE FROM public.\"OrdenDetalles\" WHERE \"OrdenId\" = @Id;";
+                    db.Execute(deleteDetallesQuery, new { Id = orden.IdOrden });
+
+                    if (orden.Servicios.Count>0 ) AgregarDetalles(orden.IdOrden, orden.Servicios);
+
+                    /*
+                    foreach (var detalle in orden.Items)
+                    {
+                        detalle.VentaId = (int)orden.Id;
+                        var detalleQuery = @"
+                        INSERT INTO public.""OrdenDetalles"" 
+                        (""VentaId"", ""ServicioId"", ""RepuestoId"", ""Cantidad"", ""PrecioUnitario"", ""Descuento"", ""Subtotal"") 
+                        VALUES (@VentaId, @ServicioId, @RepuestoId, @Cantidad, @PrecioUnitario, @Descuento, @Subtotal);
+                    ";
+                        connection.Execute(detalleQuery, detalle, transaction);
+                    }*/
+
+
+
+                }
+            }
+        }
+
+        public async Task<int> deficionClienteOrder(int orderId, int estado)
+        {
+            var db = dbConnection();
+
+            var sql = @"
+                    update public.""Ordenes""
+                    set ""Estado"" = @Estado
+                    where ""Id"" = @OrderId
+                    ";
+
+
+
+            return await db.ExecuteAsync(sql, new
+            {
+
+                Estado = estado,
+                OrderId = orderId
+
+
+            });
+             
+        }
+
+        public async Task<bool> ModificarEmpleadoAsignado(EmpleadoAsignadoDTO empleado)
+        {
+            var db = dbConnection();
+
+            var sql = @"
+                    update public.""Ordenes""
+                    set ""IdEmpleadoAsignado"" = @IdEmpleadoAsignado
+                    where ""Id"" = @OrderId
+                    ";
+
+       
+
+            var orderId = await db.ExecuteAsync(sql, new
+            {
+                
+                @IdEmpleadoAsignado = empleado.IdEmpleado,
+                @OrderId = empleado.IdOrder
+
+
+            });
+
+            return orderId > 0;
+        }
+        public async Task<List<EmpleadosComboDTO>> getEmpleadosMecanicos()
+        {
+
+            var sql_query = @"select e.""Id"" as ""IdEmpleado"",
+	                       e.""User""
+                    from public.""Empleados"" e
+                    inner join public.""Usuarios"" as u
+                                on e.""User"" = u.""User""
+		                    inner join public.""UsuarioRol"" as ur
+                            on u.""Id"" = ur.""UserId""
+		                    inner join public.""Roles"" as r
+                            on ur.""RolId"" = r.""RolId""
+                    where r.""RolId"" in (7, 9)
+                        and r.""Activo"" = true;";
+
+            using (var connection = dbConnection())
+            {
+
+                var empleadosMecanicos = (await connection.QueryAsync<EmpleadosComboDTO>(sql_query)).ToList();
+
+                return empleadosMecanicos;
+            }
+        }
+
+        private Empleado getAsignarEmpleado()
+        {
+
+            var sql_query = @"	Select e.""Id"", u.""Id"" uId, u.*
+                                from public.""Empleados"" as e 
+	                                inner join public.""Usuarios"" as u
+		                                on e.""User"" = u.""User""
+	                                inner join public.""UsuarioRol"" as ur
+	                                on u.""Id"" = ur.""UserId""
+                                    inner join public.""Roles"" as r
+	                                on ur.""RolId"" = r.""RolId""
+                                where r.""RolId"" = 7
+                                and r.""Activo"" = true;";
+
+            using (var connection = dbConnection())
+            {
+                 var oEmpleado = connection.Query < Empleado, Usuario, Empleado>(
+                        sql_query,
+                        map: (empleado, usuario) =>
+                        {
+                            if (usuario != null)
+                            {
+                                empleado.Usuario = usuario;
+                                
+                            }
+
+                            return empleado;
+                        },
+                         splitOn: "uId"
+                         );
+                return oEmpleado.FirstOrDefault();
+            };
+
+
+
         }
 
         public async Task<Orden> GetOrden(int id)
@@ -156,7 +368,7 @@ namespace UTNApiTalleres.Data.Repositorio
                                 where o.""Id"" = @Id"
                                         ;
            // , clId, peId, veId, mvId, maId, ,  
-    var sql_query = @"	select  o.""Id"" as oId, o.""Id"", 
+    var sql_query = @"	select  o.""Id"" as oId, o.""Id"",  o.""Estado"", o.""ObservacionTecnico"", o.""FechaInicio"", o.""FechaFin"", o.""Usuario"", o.""IdEmpleadoAsignado"",
 		                                 rv.""FechaRecepcion"", rv.""HoraRecepcion"", rv.""Combustible"", rv.""Kilometraje"", rv.""IdAseguradora"", rv.""Inspector"", rv.""NroSiniestro"", rv.""Franquicia"", rv.""MotivoConsulta"",		
 		                                od.""Id"" as itemid, od.""ServicioId"", od.""RepuestoId"", od.""PrecioUnitario"", od.""Bonificacion"", od.""Cantidad"", od.""SubTotal"",
                                         r.""Id"" as repId, r.""Nombre"" as ""NombreRepuesto"", r.""Descripcion"" as ""DescripcionRepuesto"", 
@@ -198,15 +410,15 @@ namespace UTNApiTalleres.Data.Repositorio
                     sql_query,
                     types: new[]
                     {
-            typeof(Orden),             // columnas de orden (o.*)
-            typeof(ItemVentaCreateDTO),// columnas de detalle (od.*)
-            typeof(RepuestoDTO),       // r.*
-            typeof(ServicioDTO),       // s.*
-            typeof(Cliente),           // c.*
-            typeof(Persona),           // p.*
-            typeof(Vehiculo),          // v.*
-            typeof(Modelovehiculo),    // mv.*
-            typeof(Marcavehiculo)      // ma.*
+                        typeof(Orden),             // columnas de orden (o.*)
+                        typeof(ItemVentaCreateDTO),// columnas de detalle (od.*)
+                        typeof(RepuestoDTO),       // r.*
+                        typeof(ServicioDTO),       // s.*
+                        typeof(Cliente),           // c.*
+                        typeof(Persona),           // p.*
+                        typeof(Vehiculo),          // v.*
+                        typeof(Modelovehiculo),    // mv.*
+                        typeof(Marcavehiculo)      // ma.*
                     },
                     map: objects =>
                     {
@@ -256,7 +468,7 @@ namespace UTNApiTalleres.Data.Repositorio
                                 PrecioUnitario = item.PrecioUnitario,
                                 Bonificacion = item.Bonificacion,
                                 Subtotal = item.Subtotal,
-                                Tipo = item.RepuestoId.HasValue ? "Repuesto" : "Servicio",
+                                Tipo = item.RepuestoId.HasValue ? "repuesto" : "servicio",
                                 Nombre = item.RepuestoId.HasValue ? repuesto?.NombreRepuesto : servicio?.NombreServicio,
                                 Descripcion = item.RepuestoId.HasValue ? repuesto?.DescripcionRepuesto : servicio?.DescripcionServicio
                             };

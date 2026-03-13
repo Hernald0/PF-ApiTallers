@@ -7,6 +7,7 @@ using UTNApiTalleres.Data.Repositorio.Interfaz;
 using WebApiTalleres.Models;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Newtonsoft.Json;
+using WebApiTalleres.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -79,20 +80,26 @@ namespace UTNApiTalleres.Controllers
             try
             {   
                 //validamos que exista la persona
-                var persona = await _personaDao.find(Persona.Id);
-                
-                //en caso de no existir retornamos Not Found
-                if (persona == null)
-                    return NotFound("La persona no existe.");
-                
-                //En caso de existir avanzamos con la actualización
-                var regActualizados = await _personaDao.update(Persona);
+                if (Persona.Id != null) {
+                    
+                    var persona = await _personaDao.find(Persona.Id);
+               
 
-                if (regActualizados)
-                    // String json = JsonConvert.SerializeObject("Actualización exitosa");
-                    //.parse("Actualización exitosa");
-                    return Ok(new { response = "Actualización exitosa" });
-                //return Content("Actualización exitosa", "application/json");
+                    //en caso de no existir retornamos Not Found
+                    if (persona == null)
+                        return NotFound("La persona no existe.");
+                
+                    //En caso de existir avanzamos con la actualización
+                    var regActualizados = await _personaDao.update(Persona);
+
+                    if (regActualizados)
+                        // String json = JsonConvert.SerializeObject("Actualización exitosa");
+                        //.parse("Actualización exitosa");
+                        return Ok(new { response = "Actualización exitosa" });
+                    //return Content("Actualización exitosa", "application/json");
+                    else
+                        return NoContent();
+                }
                 else
                     return NoContent();
             }
@@ -126,6 +133,8 @@ namespace UTNApiTalleres.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+     
 
     }
 }

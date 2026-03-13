@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System;
 using WebApiTalleres.Models;
-using UTNApiTalleres.Model;
+
 
 namespace UTNApiTalleres.Data.Repositorio.Interfaz
 {

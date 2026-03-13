@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using UTNApiTalleres.Model;
+using WebApiTalleres.Models;
 
 namespace UTNApiTalleres.Controllers
 {
@@ -88,7 +88,8 @@ namespace UTNApiTalleres.Controllers
 
         [HttpGet()]
         [Route("findFilterServReps")]
-        public async Task<IActionResult> findFilterServicioRepuesto([FromQuery] string pBusqueda)
+        public async Task<IActionResult> findFilterServicioRepuesto([FromQuery] string pBusqueda,
+                                                                    [FromQuery] string tipo)
         {
 
             if (string.IsNullOrWhiteSpace(pBusqueda) || pBusqueda.Length < 3)
@@ -98,7 +99,7 @@ namespace UTNApiTalleres.Controllers
 
             try
             {
-                var oServRepsFiltrados = await _servRepDao.FindFilterServRep (pBusqueda);
+                var oServRepsFiltrados = await _servRepDao.FindFilterServRep (pBusqueda, tipo);
                 return Ok(oServRepsFiltrados);
             }
             catch (Exception ex)

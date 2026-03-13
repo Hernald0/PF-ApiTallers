@@ -17,12 +17,13 @@ namespace WebApiTalleres.Models
 
         public string Status { get; set; }
 
-        public IList<UTNApiTalleres.Model.Servicio> Servicios { get; set; }
+        public IList<Servicio> Servicios { get; set; }
 
         public DateTime Fecha { get; set; }
 
         public TimeSpan Hora { get; set; }
   
-    
+        public string Usuario { get; set; }
+
     }
 }

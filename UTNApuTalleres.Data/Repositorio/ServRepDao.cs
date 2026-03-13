@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using UTNApiTalleres.Model;
+using WebApiTalleres.Models;
 
 namespace UTNApiTalleres.Data.Repositorio
 {
@@ -147,7 +147,7 @@ namespace UTNApiTalleres.Data.Repositorio
             return updatedServicio;
         }
         
-        public async Task<IEnumerable<ItemVentaDTO>> FindFilterServRep(string pBusqueda)
+        public async Task<IEnumerable<ItemVentaDTO>> FindFilterServRep(string pBusqueda, string? pTipo)
         {
 
             var db = dbConnection();
@@ -159,11 +159,11 @@ namespace UTNApiTalleres.Data.Repositorio
                                 union
                                 SELECT ""Id"", ""Nombre"", 'repuesto' as tipo, ""Descripcion"", ""precioCosto"", ""precioVenta"", null as ""Duracion_aproximada"", null as ""Tipo"", ""Stock""
 	                                FROM public.""Repuestos"") as tabla
-                WHERE lower(nombre) LIKE '%' || lower(@Parametro) || '%';";
+                WHERE lower(nombre) LIKE '%' || lower(@Cadena) || '%' and ( @Tipo IS NULL OR tipo = @Tipo);";
 
              
               
-            var result = await db.QueryAsync<ItemVentaDTO>(sql, new { Parametro = pBusqueda });
+            var result = await db.QueryAsync<ItemVentaDTO>(sql, new { Cadena = pBusqueda, Tipo = pTipo });
                
             return  result.ToList();
              

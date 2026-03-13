@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using UTNApiTalleres.Model;
 using WebApiTalleres.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -48,8 +47,8 @@ namespace UTNApiTalleres.Controllers
                 Console.WriteLine($"Tipo Identificador: {IdTipoIdentificador}, Nro Identificacion: {NroIdentificador}");
                 var pvmIdentificador = new vmIdentificador
                                             {
-                                                TipoIdentificador = Convert.ToInt32(IdTipoIdentificador),
-                                                NroIdentificacion = Convert.ToInt32(NroIdentificador)
+                                                TipoIdentificador =     Convert.ToInt32(IdTipoIdentificador),
+                                                NroIdentificacion = NroIdentificador//Convert.ToInt32(NroIdentificador)
                 };
 
                 var cliente = await _clienteDao.findByNroIdentificacion(pvmIdentificador);

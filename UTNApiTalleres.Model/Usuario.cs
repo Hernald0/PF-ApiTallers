@@ -9,9 +9,16 @@ namespace WebApiTalleres.Models
     {
         public int Id { get; set; }
         public string User { get; set; }
+        public string NombreCompleto { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public int? IdPersona { get; set; }
+
+        public int? IdEmpleado { get; set; }
         public DateTime? FecAlta { get; set; }
+        public bool Activo { get; set; }
+
+        public Rol Rol{ get; set; }
+        //public List<Rol> Roles { get; set; } = new List<Rol>();
     }
 }

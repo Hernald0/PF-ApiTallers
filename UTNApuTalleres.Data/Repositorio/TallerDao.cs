@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using UTNApiTalleres.Model;
 using WebApiTalleres.Models;
 
 namespace UTNApiTalleres.Data.Repositorio
@@ -16,10 +15,14 @@ namespace UTNApiTalleres.Data.Repositorio
     {
         private PostgresqlConfiguration _connectionString;
         private readonly IPersonaDao _personaDao;
+        private readonly IClienteDao _clienteDao;
+   
 
-        public TallerDao(PostgresqlConfiguration connectionString)
+        public TallerDao(PostgresqlConfiguration connectionString, IClienteDao clienteDao, IPersonaDao personaDao   )
         {
             this._connectionString = connectionString;
+            _clienteDao = clienteDao;
+            _personaDao = personaDao;
         }
 
         protected NpgsqlConnection dbConnection()
@@ -116,8 +119,17 @@ namespace UTNApiTalleres.Data.Repositorio
             throw new NotImplementedException();
         }
 
- 
-        public async Task<IEnumerable<Empleado>> findEmpleadoAll( int idTaller)      
+
+        public async Task<Empleado> findEmpleado(int idEmpleado)
+        {
+            var empleado =  await findEmpleados(idEmpleado);
+
+            return empleado.FirstOrDefault();
+
+        }
+        
+
+        public async Task<IEnumerable<Empleado>> findEmpleados( int? idEmpleado)      
         {
             var sql_query = @" SELECT    emp.""Id"" as idEm, emp.*,
 		                                  a.""Id"" as idpe, a.*, 
@@ -143,7 +155,9 @@ namespace UTNApiTalleres.Data.Repositorio
 			                                on d.""Id"" = a.""IdGenero"" 
 			                                left join
 		                                public.""Localidades"" as e    
-			                                on e.""Id"" = a.""IdLocalidad"" where tal.""Id"" = @Id";
+			                                on e.""Id"" = a.""IdLocalidad""
+                                        where emp .""Id"" = @Id
+                                           or @Id is null";
 
 
             using (var connection = dbConnection())
@@ -171,7 +185,7 @@ namespace UTNApiTalleres.Data.Repositorio
                                                        
                                                    }; return empleado;
                                                },
-                                               new { Id = idTaller },
+                                               new { Id = idEmpleado },
                                                splitOn: "idEm,idpe,idec,idti,idge, idlo").ConfigureAwait(false);
               
 
@@ -183,9 +197,14 @@ namespace UTNApiTalleres.Data.Repositorio
 
         public async Task<bool> createEmpleado(Empleado empleado)
         {
+
+            int? PersonaId = null;
+
             var db = dbConnection();
 
-            //_personaDao.create(empleado.Persona);
+            if (!(empleado.Persona.Id > 0))
+
+                 {   PersonaId = await this._personaDao.create(empleado.Persona); }
 
             var sql_insert = @"
                             INSERT INTO public.""Empleados""(""IdTaller"", ""IdPersona"")
@@ -195,10 +214,8 @@ namespace UTNApiTalleres.Data.Repositorio
             var result = await db.ExecuteAsync(sql_insert, new
             {
                 IdTaller = 1,
-                IdPersona = 1
+                IdPersona =  (PersonaId == null) ? empleado.Persona.Id : PersonaId
             }); 
-
-
 
             return result > 0;
         }
@@ -542,17 +559,198 @@ namespace UTNApiTalleres.Data.Repositorio
 
         }
 
-        
+
+        public async Task<Empleado> EmpleadoByPersonaIdAsync(int? IdPersona)
+        {
+            
+            if (IdPersona != null) { 
+            
+                    var sql_query = @" SELECT    emp.""Id"" as idEm, emp.*,
+		                                          a.""Id"" as idpe, a.*, 
+		                                          b.""Id"" as idec, b.*, 
+		                                          c.""Id"" as idti, c.*, 
+		                                          d.""Id"" as idge, d.*,
+		                                          e.""Id"" as idlo, e.*, CONCAT(e.""CodigoPostal"", '-', e.""Nombre"") as cpNombre
+                                        FROM 	public.""Talleres"" as tal
+			                                        inner join 	
+		                                        public.""Empleados"" as emp 
+			                                        on tal.""Id"" = emp.""IdTaller""
+			                                        inner join
+		                                        public.""Personas"" as a 
+			                                        on emp.""IdPersona"" = a.""Id"" 
+			                                        left join
+		                                        public.""Estadociviles"" as b
+			                                        on b.""Id"" = a.""IdEstadoCivil"" 
+			                                        left join
+		                                        public.""Tipoidentificadores"" as c    
+			                                        on c.""Id"" = a.""IdTipoIdentificador""  
+			                                        left join
+		                                        public.""Generos"" as d    
+			                                        on d.""Id"" = a.""IdGenero"" 
+			                                        left join
+		                                        public.""Localidades"" as e    
+			                                        on e.""Id"" = a.""IdLocalidad""
+                                                where  a.""Id"" = @Id";
 
 
-        
+                    using (var connection = dbConnection())
+                    {
+
+
+                        var oEmpleado = await connection.QueryAsync<Empleado, Persona, EstadoCivil, TipoIdentificador, Genero, Localidad, Empleado>(sql_query,
+                                                       map: (empleado, persona, EstadoCivil, tipoIdentificador, genero, localidad) =>
+                                                       {
+                                                           if (persona.Id > 0)
+                                                           {
+                                                               empleado.Persona = (Persona)persona;
+
+                                                               if (EstadoCivil.Id > 0)
+                                                                   empleado.Persona.EstadoCivil = (EstadoCivil)EstadoCivil;
+
+                                                               if (tipoIdentificador.Id > 0)
+                                                                   empleado.Persona.TipoIdentificador = (TipoIdentificador)tipoIdentificador;
+
+                                                               if (genero.Id > 0)
+                                                                   empleado.Persona.Genero = (Genero)genero;
+
+                                                               if (localidad.Id > 0)
+                                                                   empleado.Persona.Localidad = (Localidad)localidad;
+
+                                                           }; return empleado;
+                                                       },
+                                                       new { Id = IdPersona },
+                                                       splitOn: "idEm,idpe,idec,idti,idge, idlo").ConfigureAwait(false);
+
+
+                        if (oEmpleado.Count() != 0 )
+    
+                            return (Empleado)oEmpleado.First();
+                        else
+                            return null;
+                    }
+
+            }
+            else
+                return null;
+        }
+
+
 
         public Task<Servicio> findServicio(int IdServicio)
         {
             throw new NotImplementedException();
         }
-    }
+   
+
+    public async Task<object> ValidarPersonaAsync(vmIdentificador pvmIdentificador, string tipo)
+    {
+            Persona per;
+            var sql_query = @"  select      a.""Id"" AS Id, a.*,
+                                            b.""Id"" AS EstadoCivilId, b.*,
+                                            c.""Id"" AS TipoIdentificadorId, c.*,
+                                            d.""Id"" AS GeneroId, d.*,
+                                            e.""Id"" AS LocalidadId, e.*, CONCAT(e.""CodigoPostal"", '-', e.""Nombre"") as cpNombre       
+                                     FROM public.""Personas"" as a 
+		                                left join
+			                                public.""Estadociviles"" as b
+		                                on b.""Id"" = a.""IdEstadoCivil"" 
+		                                left join
+			                                public.""Tipoidentificadores"" as c    
+		                                on c.""Id"" = a.""IdTipoIdentificador""  
+		                                left join
+			                                public.""Generos"" as d    
+		                                on d.""Id"" = a.""IdGenero"" 
+		                                left join
+			                                public.""Localidades"" as e    
+		                                on e.""Id"" = a.""IdLocalidad"" 
+                                     where a.""NroIdentificacion"" = @NroIdentificacion
+                                       and a.""IdTipoIdentificador"" = @IdTipoIdentificador
+                                       ";
+
+            using (var connection = dbConnection())
+            {
+                var persona = await connection.QueryAsync<Persona, EstadoCivil, TipoIdentificador, Genero, Localidad,  Persona>(
+                                sql_query,
+                                (persona, estadocivil, tipoidentificador, genero, localidad ) =>
+                                {
+
+                                    if (estadocivil.Id > 0)
+                                        persona.EstadoCivil = (EstadoCivil)estadocivil;
+
+                                    if (tipoidentificador.Id > 0)
+                                        persona.TipoIdentificador = (TipoIdentificador)tipoidentificador;
+
+                                    if (genero.Id > 0)
+                                        persona.Genero = (Genero)genero;
+
+                                    if (localidad.Id > 0)
+                                        persona.Localidad = (Localidad)localidad;
+
+
+                                    return persona;
+
+
+
+                                },
+                                new
+                                {
+                                    NroIdentificacion = pvmIdentificador.NroIdentificacion,
+                                    IdTipoIdentificador = pvmIdentificador.TipoIdentificador
+                                },
+                                splitOn: "EstadoCivilId,TipoIdentificadorId,GeneroId,LocalidadId").ConfigureAwait(false);
+                           
+
+                  per = persona.FirstOrDefault();
+            }; 
+
+                
+
+            if (per != null)
+            {
+                if (tipo.ToLower() == "persona" )
+                    return new
+                    {
+                        Exists = true,
+                        Message = $"La persona existe.",
+                        Persona = per
+                    };
+
+                object rolPersona = tipo.ToLower() switch
+                {
+                    "empleado" => await  EmpleadoByPersonaIdAsync(per.Id),
+                    "cliente"  => await this._clienteDao.findByNroIdentificacion(pvmIdentificador),
+                    _          => null
+
+                };
+
+                if (rolPersona != null)
+
+                    return new
+                    {
+                        Exists = true,
+                        Message = $"La persona existe y el rol {tipo} existen.",
+                        Persona = rolPersona
+                    };
+                else
+                    return new
+                    {
+                        Exists = false,
+                        Message = $"La persona existe pero no está registrada para el rol {tipo}.",
+                        Persona = per
+                    };
+
+            }
+            else
+
+                return new
+                {
+                    Exists = false,
+                    Message = $"La persona no existe.",
+
+                };
+
 
         
-
     }
+   }
+}

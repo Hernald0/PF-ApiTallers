@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using UTNApiTalleres.Application.DTOs;
 using WebApiTalleres.Models;
  
 
@@ -11,7 +12,7 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
     {
         IEnumerable<TimeSpan> GetDisponibleSlots(string date);
 
-        System.Threading.Tasks.Task<IEnumerable<WebApiTalleres.Models.Turno>> GetTurnos();
+        System.Threading.Tasks.Task<IEnumerable<Turno>> GetTurnos();
 
         void AgregarTurno(WebApiTalleres.Models.Turno turno);
 
@@ -23,6 +24,8 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         Task<Turno>  GetTurno(int id);
 
-        Task<int> PostRecepcionTurno(Model.RecepcionTurnoDTO recepcionTurno);
+        Task<int> PostRecepcionTurno(RecepcionTurnoDTO recepcionTurno);
+
+        Task<IEnumerable<TurnosCalendarDTO>> GetTurnosCalendar();
     }
 }

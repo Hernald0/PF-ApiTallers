@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApiTalleres.Models;
 
-namespace UTNApiTalleres.Model
+namespace WebApiTalleres.Models
 {
     public class TurnoRecepcion : Turno
     {

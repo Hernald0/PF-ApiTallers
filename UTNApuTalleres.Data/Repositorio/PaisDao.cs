@@ -120,8 +120,7 @@ namespace UTNApiTalleres.Data.Repositorio
                                         on loc.""IdProvincia"" = prov.""Id""
                                 where loc.""Nombre"" like CONCAT('%',@cadena,'%') 
                                    or cast(loc.""CodigoPostal"" as varchar) like CONCAT('%',@cadena,'%')
-                                  and prov.""Id"" = 3
-                            ";
+                                   ";
 
             using (var db = dbConnection())
             {

@@ -9,7 +9,7 @@ using UTNApiTalleres.Data.Repositorio.Interfaz;
 using WebApiTalleres.Models;
 using System.Linq;
 using System.Data;
-using UTNApiTalleres.Model;
+
 
 namespace UTNApiTalleres.Data.Repositorio
 {
@@ -170,7 +170,7 @@ namespace UTNApiTalleres.Data.Repositorio
                                             new
                                             {
                                                 PersonaId = pCliente.Persona.Id,
-                                                TallerId = pCliente.Taller.Id,
+                                                TallerId = 1, //pCliente.Taller.Id,
                                                 Id = pCliente.Id
                                             });
 
@@ -240,6 +240,8 @@ namespace UTNApiTalleres.Data.Repositorio
                 }
 
 
+               var resp = await this._personaDao.update(pCliente.Persona);
+
 
             }
 
@@ -295,30 +297,19 @@ namespace UTNApiTalleres.Data.Repositorio
 
         public async Task<Cliente> find(int? pIdCliente)
         {
-            /*var sql_query = @" select  * 
-                                from public.""Clientes"" as a 
-                                inner join
-                                     public.""Personas"" as b
-                                      on(a.""Id"" = b.""Id"")
-                                inner join 
-                                     public.""Talleres"" as c
-                                      on(a.""TallerId"" = c.""Id"")
-                                where b.""Id"" = @Id";    */
            
-            var sql_query = @" select     cli.""Id"" as idcl, cli.*,
-			                              per.""Id"" as idpe, per.*, 
-			                              tal.""Id"" as idta, tal.*, 
+           
+            var sql_query = @" select     cli.""Id"" ,
+			                              per.""Id"" as idpe, per.*, 			                               
 			                              v.""Id"" as idve, v.*,
 			                              mv.""Id"" as idmv, mv.*, 
 			                               m.""Id"" as idma, m.*,
-                                          tip.""Id"" as idti, tip.*
+                                          tip.""Id"" as idti, tip.*,
+                                          e.""Id"" AS LocalidadId, e.*, CONCAT(e.""CodigoPostal"", '-', e.""Nombre"") as cpNombre     
                                 from public.""Clientes"" as cli 
 			                            inner join
 				                             public.""Personas"" as per
 				                              on(cli.""PersonaId"" = per.""Id"")
-			                            inner join 
-				                             public.""Talleres"" as tal
-				                              on(cli.""TallerId"" = tal.""Id"")
 			                            left join
 				                             public.""Vehiculos"" v
 				                             on v.""IdCliente"" = cli.""Id""	 
@@ -331,82 +322,27 @@ namespace UTNApiTalleres.Data.Repositorio
                                         left join
 				                            public.""Tipoidentificadores"" as tip
                                             on tip.""Id"" = per.""IdTipoIdentificador""
+                                        left join
+			                                public.""Localidades"" as e    
+		                                on e.""Id"" = per.""IdLocalidad"" 
                                  where cli.""Id"" = @Id
                                    and v.""FechaBaja"" is null";
 
-            //var clientes =  null;
+           
 
             using (var connection = dbConnection())
             {
-                /*
-                var oCliente =  await connection.QueryAsync<Cliente, Persona, Taller, Cliente>(                             
-                             sql_query,                             
-                             (cliente, persona, taller) =>
-                             {                                 
-                                 cliente.Persona = persona;
-                                 cliente.Taller = taller;
-                                 return cliente;
-                             },
-                             new { Id = id }
-                  
-                         )
-                   ;
-                ;   */
+                
 
-
-                /*
-                var oCliente =  await  connection.QueryAsync<Cliente, Persona, Taller, Vehiculo, Modelovehiculo, Marcavehiculo, Cliente>(sql_query,
-                                          map: (cliente, persona, taller, vehiculo, modelovehiculo, marcavehiculo) =>
-                                          {
-
-                                              if (persona.Id > 0)
-                                              {
-                                                  cliente.Persona = (Persona)persona;
-                                              
-                                                  if (taller.Id > 0)
-                                                  {
-                                                      cliente.Taller = (Taller)taller;
-                                                  }
-
-                                                  if (vehiculo.Id > 0)
-                                                  {
-
-
-                                                      if (cliente.Vehiculos == null)
-                                                      {
-                                                          cliente.Vehiculos = new List<Vehiculo>();
-                                                      }
-                                                      
-                                                      Vehiculo vehiculoCliente = new Vehiculo();
-
-                                                      vehiculoCliente = (Vehiculo) vehiculo;
-
-                                                      if (modelovehiculo.Id > 0)
-                                                          vehiculoCliente.Modelovehiculo = (Modelovehiculo)modelovehiculo;
-
-                                                      if (marcavehiculo.Id > 0)
-                                                          vehiculoCliente.Modelovehiculo.Marcavehiculo = (Marcavehiculo)marcavehiculo;
-
-
-                                                      cliente.Vehiculos.Add((Vehiculo)vehiculoCliente);
-                                                  }
-
-                                               };
-
-                                              return cliente;
-                                          },
-                                          new { Id = idCliente },
-                                          splitOn: "idcl, idpe, idta, idve, idmv, idma").ConfigureAwait(false);
-                */
-
-                var result = await connection.QueryAsync<Cliente, Persona, Taller, Vehiculo, Modelovehiculo, Marcavehiculo, TipoIdentificador, Cliente>(
+                var result = await connection.QueryAsync<Cliente, Persona, Vehiculo, Modelovehiculo, Marcavehiculo, TipoIdentificador, Localidad, Cliente>(
                                 sql_query,
-                                (cliente, persona, taller, vehiculo, modelovehiculo, marcavehiculo, tipoidentificador) =>
+                                (cliente, persona,  vehiculo, modelovehiculo, marcavehiculo, tipoidentificador, localidad) =>
                                 {
-                                    cliente.Persona = persona;
-                                    cliente.Taller = taller;
+                                    cliente.Persona = persona;                                     
                                     cliente.Persona.TipoIdentificador = tipoidentificador;
-                                   
+                                    cliente.Persona.Localidad = localidad;
+
+
                                     if (vehiculo.Id != null)
                                     {
                                         if (cliente.Vehiculos == null)
@@ -422,7 +358,7 @@ namespace UTNApiTalleres.Data.Repositorio
                                     return cliente;
                                 },
                                 new { Id = pIdCliente },
-                                splitOn: "idcl, idpe, idta, idve, idmv, idma, idti"
+                                splitOn: " idpe, idve, idmv, idma, idti, LocalidadId"
                             );
 
                 var clientes = result.GroupBy(c => c.Id).Select(g =>
@@ -433,24 +369,7 @@ namespace UTNApiTalleres.Data.Repositorio
                 });
 
                 return (Cliente) clientes.FirstOrDefault();
-
-                /*
-                 * var marcaDict = new Dictionary<int, Marcavehiculo>();
-                var marcas = await connection.QueryAsync<Marcavehiculo, Modelovehiculo, Marcavehiculo>(
-                    query, (marca, modelo) =>
-                    {
-                        if (!marcaDict.TryGetValue(marca.Id, out var currentMarca))
-                        {
-                            currentMarca = marca;
-                            marcaDict.Add(currentMarca.Id, currentMarca);
-                        }
-                        currentMarca.Modelovehiculos.Add(modelo);
-                        return currentMarca;
-                    }
-                );
-                return marcas.Distinct().ToList();*/
-
-                //return (Cliente) oCliente.FirstOrDefault();
+ 
             }
 
            
@@ -521,36 +440,52 @@ namespace UTNApiTalleres.Data.Repositorio
                                 splitOn: "idcl, idpe, idta, idve, idmv, idma, idti"
                             );
 
-            var clientes = result.GroupBy(c => c.Id).Select(g =>
-            {
-                var cliente = g.First();
-                cliente.Vehiculos = g.SelectMany(c => c.Vehiculos).ToList();
-                return cliente;
-            });
+                var clientes = result.GroupBy(c => c.Id).Select(g =>
+                {
+                    var cliente = g.First();
+                    cliente.Vehiculos = g.SelectMany(c => c.Vehiculos).ToList();
+                    return cliente;
+                });
 
-            return (Cliente)clientes.FirstOrDefault();
-        }
+                return (Cliente)clientes.FirstOrDefault();
+             }
+
         }
 
         public async Task<IEnumerable<Cliente>> findAll()
         {
-            var sql_query = @" select  * 
-                                from public.""Clientes"" as a 
-                                inner join
-                                     public.""Personas"" as b
-                                      on(a.""PersonaId"" = b.""Id"")
-                                inner join 
-                                     public.""Talleres"" as c
-                                      on(a.""TallerId"" = c.""Id"")
-                                left join 
-                                     public.""Tipoidentificadores"" as t
-                                      on(t.""Id"" = b.""IdTipoIdentificador"") 
+            var sql_query = @"  select     cli.""Id"" as idcl, cli.*,
+			                              per.""Id"" as idpe, per.*, 			                            
+			                              v.""Id"" as idve, v.*,
+			                              mv.""Id"" as idmv, mv.*, 
+			                               m.""Id"" as idma, m.*,
+                                          tip.""Id"" as idti, tip.*,
+                                          e.""Id"" AS LocalidadId, e.*, CONCAT(e.""CodigoPostal"", '-', e.""Nombre"") as cpNombre     
+                                from public.""Clientes"" as cli 
+			                            inner join
+				                             public.""Personas"" as per
+				                              on(cli.""PersonaId"" = per.""Id"")			                 
+			                            left join
+				                             public.""Vehiculos"" v
+				                             on v.""IdCliente"" = cli.""Id""	 
+			                            left join 
+				                             public.""Modelovehiculos"" as mv
+				                             on v.""IdModelo"" = mv.""Id""
+			                            left join
+				                             public.""Marcavehiculos"" as m
+				                             on mv.""IdMarca"" = m.""Id""
+                                        left join
+				                            public.""Tipoidentificadores"" as tip
+                                            on tip.""Id"" = per.""IdTipoIdentificador""
+                                        left join
+			                                public.""Localidades"" as e    
+		                                on e.""Id"" = per.""IdLocalidad""
                               ";
             
 
             using (var connection = dbConnection())
-            {                
-
+            {
+                /*
                 var oCliente = await connection.QueryAsync<Cliente, Persona, Taller, TipoIdentificador, Cliente>(
 
                              sql_query,
@@ -565,9 +500,43 @@ namespace UTNApiTalleres.Data.Repositorio
                              }                         
                          )
                    ;
-                ;
+                ;*/
 
-                return oCliente;
+                var result = await connection.QueryAsync<Cliente, Persona,  Vehiculo, Modelovehiculo, Marcavehiculo, TipoIdentificador, Localidad, Cliente>(
+                                sql_query,
+                                (cliente, persona, vehiculo, modelovehiculo, marcavehiculo, tipoidentificador, localidad) =>
+                                {
+                                    cliente.Persona = persona;
+                                    cliente.Persona.Localidad = localidad;
+                                    cliente.Persona.TipoIdentificador = tipoidentificador;
+
+                                    if (vehiculo.Id != null)
+                                    {
+                                        if (cliente.Vehiculos == null)
+                                        {
+                                            cliente.Vehiculos = new List<Vehiculo>();
+                                        }
+
+                                        vehiculo.Modelovehiculo = modelovehiculo;
+                                        modelovehiculo.Marcavehiculo = marcavehiculo;
+                                        cliente.Vehiculos.Add(vehiculo);
+
+                                    }
+                                    return cliente;
+                                },
+                                splitOn: "idcl, idpe, idve, idmv, idma, idti, LocalidadId"
+                            );
+
+                var clientes = result.GroupBy(c => c.Id).Select(g =>
+                {
+                    var cliente = g.First();
+                    cliente.Vehiculos = g.SelectMany(c => c.Vehiculos).ToList();
+                    return cliente;
+                });
+
+                
+
+                return clientes;
             }
         }
 

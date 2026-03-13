@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UTNApiTalleres.Model
+namespace WebApiTalleres.Models
 {
     public class RecepcionTurnoDTO
     {
@@ -15,6 +15,10 @@ namespace UTNApiTalleres.Model
         public int IdVehiculo  { get; set; }
 
         public DateTime FechaRecepcion { get; set; }
+
+        public DateTime? FechaInicio { get; set; }
+
+        public DateTime? FechaFin { get; set; }
 
         public string HoraRecepcion { get; set; }
        

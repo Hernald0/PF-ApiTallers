@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using UTNApiTalleres.Model;
 using WebApiTalleres.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -129,12 +128,32 @@ namespace UTNApiTalleres.Controllers
 
         [HttpGet()]
         [Route("empleados/{id:int}")]
-        public async Task<IActionResult> findEmpleadoAll(int id)
+        public async Task<IActionResult> findEmpleado(int id)
         {
 
             try
             {
-                var empleados = await _tallerDao.findEmpleadoAll(id);
+                var empleados = await _tallerDao.findEmpleado(id);
+                return Ok(empleados);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
+
+        [HttpGet()]
+        [Route("empleados")]
+        public async Task<IActionResult> findEmpleadoAll()
+        {
+
+            try
+            {
+                var empleados = await _tallerDao.findEmpleados(null);
                 return Ok(empleados);
             }
             catch (Exception ex)
@@ -182,6 +201,24 @@ namespace UTNApiTalleres.Controllers
 
         }
 
+            [HttpPost()]
+            [Route("empleados/create")]
+            public async Task<IActionResult> createEmpleado(Empleado empleado)
+            {
+
+                try
+                {
+                    var empleados = await _tallerDao.createEmpleado(empleado);
+                    return Ok(empleados);
+                }
+                catch (Exception ex)
+                {
+                    //log error
+                    return StatusCode(500, ex.Message);
+                }
+
+            }
+
         [HttpPut()]
         [Route("empleados")]
         public async Task<IActionResult> putEmpleado(Empleado empleado)
@@ -218,6 +255,13 @@ namespace UTNApiTalleres.Controllers
 
 
         }*/
+
+        [HttpPost("validar")]
+        public async Task<IActionResult> ValidarPersona([FromBody] vmIdentificador pvmIdentificador, [FromQuery] string tipo)  
+        {
+            var resultado = await _tallerDao.ValidarPersonaAsync(pvmIdentificador, tipo);
+            return Ok(resultado);
+        }
 
         [HttpGet()]
         [Route("clientes/{id:int}")]

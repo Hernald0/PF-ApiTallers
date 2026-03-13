@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UTNApiTalleres.Data.Repositorio.Interfaz;
-using UTNApiTalleres.Model;
 using Npgsql;
 using Dapper;
 using WebApiTalleres.Models;
@@ -189,6 +188,75 @@ namespace UTNApiTalleres.Data.Repositorio
             }
         }
 
+        public async Task<int> AgregarVentaOrden(OrdenDTO orden)
+        {
+            string insert = @"INSERT INTO public.""Ventas""(
+	                                                        ""ClienteId"", 
+                                                            ""VehiculoId"", 
+                                                            ""FechaEmision"", 
+                                                            ""Observaciones"", 
+                                                            ""MontoTotal"", 
+                                                            ""Usuario"", 
+                                                            ""Descuento"", 
+                                                            ""Efectivo"", 
+                                                            ""TarjetaCredito"",
+                                                            ""MontoTarjetaCredito"", 
+                                                            ""CuentaCorriente"", 
+                                                            ""Estado"",
+                                                            ""NroVenta"", 
+                                                            ""OrdenId"")
+	                                               VALUES ( @ClienteId, 
+                                                            @VehiculoId, 
+                                                            @FechaEmision, 
+                                                            @Observaciones, 
+                                                            @MontoTotal,
+                                                            @Usuario,
+                                                            @Descuento, 
+                                                            @Efectivo, 
+                                                            @TarjetaCredito, 
+                                                            @MontoTarjetaCredito,
+                                                            @CuentaCorriente, 
+                                                            @Estado, @NroVenta, @OrdenId) returning ""Id""";
+
+            Venta venta = null ;
+
+            using (var connection = dbConnection())
+            {
+             
+                var paramCabecera = new
+                {
+                   
+                        @ClienteId = orden.IdCliente,
+                        @VehiculoId = orden.IdVehiculo,
+                        @FechaEmision = (DateTime?)null,
+                        @Observaciones = (string?)null,
+                        @Usuario = orden.Usuario,
+                        @OrdenId = orden.IdOrden,
+                        @MontoTotal = (decimal?)null,
+                        @Descuento = (decimal?)null,
+                        @Efectivo = (decimal?)null,
+                        @TarjetaCredito = (decimal?)null,
+                        @MontoTarjetaCredito = (decimal?)null,
+                        @CuentaCorriente = (decimal?)null,
+                        @Estado = "presupuesto",
+                        @NroVenta = (int?)null
+                         
+
+                };
+
+                int VentaId = await connection.QuerySingleAsync<int>(insert, paramCabecera);
+
+                if (orden.Servicios != null && orden.Servicios.Any())
+                {
+                      this.CrearDetalles(VentaId, orden.Servicios);
+                };
+
+                return VentaId;
+            }; 
+            
+           
+        } 
+
         public void AgregarVenta(VentaCreateDTO venta)
         {
             using (var connection = dbConnection())
@@ -279,6 +347,43 @@ namespace UTNApiTalleres.Data.Repositorio
 
                
             }
+        }
+
+        private void CrearDetalles(int IdVenta, List<ItemVentaCreateDTO> Items)
+        {
+
+           
+            if (Items != null)
+            {
+
+                using (var connection = dbConnection())
+                {
+                    foreach (var detalle in Items)
+                    {
+                        detalle.VentaId = (int)IdVenta;
+                        var detalleQuery = @"
+                                INSERT INTO public.""VentaDetalles"" 
+                                (""VentaId"", ""ServicioId"", ""RepuestoId"", ""Cantidad"", ""PrecioUnitario"", ""Bonificacion"", ""SubTotal"") 
+                                VALUES (@VentaId, @ServicioId, @RepuestoId, @Cantidad, @PrecioUnitario, @Descuento, @Subtotal);
+                            ";
+
+                        var paramItem = new
+                        {
+                            @VentaId = IdVenta,
+                            @ServicioId = (detalle.Tipo == "servicio") ? (object)detalle.ItemId : DBNull.Value,
+                            @RepuestoId = (detalle.Tipo == "repuesto") ? (object)detalle.ItemId : DBNull.Value,
+                            @Cantidad = detalle.Cantidad,
+                            @PrecioUnitario = detalle.PrecioUnitario,
+                            @Descuento = detalle.Bonificacion,
+                            @Subtotal = detalle.Subtotal
+                        };
+
+                        connection.Execute(detalleQuery, paramItem);
+
+                    }
+                }
+            }
+
         }
 
         public void ModificarVenta(VentaCreateDTO venta)

@@ -7,7 +7,7 @@ namespace WebApiTalleres.Models
 {
     public partial class Persona
     {     
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Nombre { get; set; }
         public string? RazonSocial { get; set; }
         public string Apellido { get; set; }
@@ -24,7 +24,7 @@ namespace WebApiTalleres.Models
 
         public TipoIdentificador? TipoIdentificador { get; set; }
         //public int? IdTipoIdentificador { get; set; }
-        public int? NroIdentificacion { get; set; }
+        public string? NroIdentificacion { get; set; }
         public string? TipoPersona { get; set; }
         public Genero? Genero { get; set; }
         public string? Ocupacion { get; set; }

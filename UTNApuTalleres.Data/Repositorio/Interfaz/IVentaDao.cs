@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UTNApiTalleres.Model;
+using WebApiTalleres.Models;
 
 
 namespace UTNApiTalleres.Data.Repositorio.Interfaz
@@ -23,7 +23,9 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         int CancelarVenta(int id);
 
-        
+        Task<int> AgregarVentaOrden(OrdenDTO orden);
+
+
 
     }
 }
