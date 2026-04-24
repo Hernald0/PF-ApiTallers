@@ -131,5 +131,12 @@ namespace UTNApiTalleres.Controllers
      
         }
 
+        [HttpGet("validarNombreAseguradora/{nombre}")]
+        public async Task<IActionResult> validarNombreGenero(string nombre)
+        {
+            var accesos = await _aseguradoraDao.ExisteNombreAseguradora(nombre);
+            return Ok(accesos);
+        }
+
     }
 }

@@ -166,6 +166,28 @@ namespace UTNApiTalleres.Data.Repositorio
             }
         }
 
-        
+        public async Task<bool> ExisteNombreGenero(string nombre)
+        {
+            var db = dbConnection();
+
+            string sql = @"select count(*) from public.""Generos""
+                                where REPLACE(upper(""Descripcion""),'/','') = @Descripcion";
+
+            int cant = await db.QuerySingleAsync<int>(sql, new { Descripcion = nombre.ToUpper() });
+
+            if (cant > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+             
+        }
+
     }
+
+        
+    
 }

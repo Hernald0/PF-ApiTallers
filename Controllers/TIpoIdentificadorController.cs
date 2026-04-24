@@ -130,5 +130,12 @@ namespace UTNApiTalleres.Controllers
             }
 
         }
+
+        [HttpGet("validarNombreTipoIdentificador/{nombre}")]
+        public async Task<IActionResult> validarNombreGenero(string nombre)
+        {
+            var accesos = await _tipoidentificadorDao.ExisteNombreTipoIdentificador(nombre);
+            return Ok(accesos);
+        }
     }
 }

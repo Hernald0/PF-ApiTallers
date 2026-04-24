@@ -752,5 +752,48 @@ namespace UTNApiTalleres.Data.Repositorio
 
         
     }
-   }
+
+        public async Task<bool> ValidarNombreModelo(string nombre)
+        {
+            var db = dbConnection();
+
+            string sql = @"select count(*) from public.""Modelovehiculos""
+                            where upper(""NombreModelo"") = @Nombre";
+
+            int cant = await db.QuerySingleAsync<int>(sql, new { Nombre = nombre.ToUpper() });
+
+            if (cant > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        public async Task<bool> ValidarNombreMarca(string nombre)
+        {
+            var db = dbConnection();
+
+            string sql = @"select count(*) from public.""Marcavehiculos""
+                            where upper(""Nombre"") = @Nombre";
+
+            int cant = await db.QuerySingleAsync<int>(sql, new { Nombre = nombre.ToUpper() });
+
+            if (cant > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+
+    }
+
 }

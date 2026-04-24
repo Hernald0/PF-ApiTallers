@@ -83,14 +83,15 @@ namespace UTNApiTalleres.Controllers
             return CreatedAtAction(nameof(Get), new { id = venta.Id }, venta);
         }
 
-        [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] VentaCreateDTO venta)
+        [HttpPut("modificarVenta")]
+        public ActionResult Put([FromBody] VentaCreateDTO venta)
         {
-            if (id != venta.Id)
+            if (venta.Id == null || venta.Id <= 0)
                 return BadRequest();
 
-            _ventaDao.ModificarVenta(venta);
-            return NoContent();
+            int? NroVenta = _ventaDao.ModificarVenta(venta);
+            return Ok(new { NroVenta = NroVenta }
+            );
         }
 
         [HttpDelete("{id}")]

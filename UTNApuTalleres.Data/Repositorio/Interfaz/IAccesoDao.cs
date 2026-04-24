@@ -24,8 +24,12 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
         Task SetAccesosPorRolAsync(int rolId, List<int> accesosIds);
         Task<Acceso>  GetByIdAsync(int id);
 
- 
+        Task<bool> ExisteNombreAcceso(string acceso);
 
-        
+        Task<bool> ExisteRutaAcceso(string ruta);
+
+
+
+
     }
 }

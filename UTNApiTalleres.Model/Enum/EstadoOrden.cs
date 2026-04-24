@@ -15,6 +15,7 @@ namespace WebApiTalleres.Models.Enum
         Finalizado = 5,
         CanceladoCliente = 6,
         CanceladoTaller = 7,
+        Entregado = 8
 
     }
 }

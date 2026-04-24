@@ -15,7 +15,7 @@ namespace UTNApiTalleres.Application.DTOs
 
         public string Rol { get; set; }
 
-        public List<AccesoDTO> Accesos { get; set; }
+        public List<MenuGrupoDTO>  Accesos { get; set; }
 
         public string Token { get; set; }
     }

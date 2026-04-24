@@ -17,7 +17,9 @@ namespace WebApiTalleres.Models
         public String Usuario { get; set; }
 
         public int ClienteId { get; set; }
-         
+
+        public int? VehiculoId { get; set; }
+
         public List<ItemVentaCreateDTO> Items { get; set; } = new List<ItemVentaCreateDTO>();
  
         public decimal MontoTotal { get; set; }

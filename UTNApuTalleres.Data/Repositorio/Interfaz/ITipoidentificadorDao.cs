@@ -22,5 +22,7 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         //recuperar todos los objetos desde la base
         Task<IEnumerable<TipoIdentificador>> findAll();
+
+        Task<bool> ExisteNombreTipoIdentificador(string nombre);
     }
 }

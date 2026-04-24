@@ -19,5 +19,7 @@ namespace UTNApiTalleres.Application.Interfaces
 
         Task<int> AssignPermisoAsync(int rolId, int accesoId, int permisoId);
         Task<int> RemovePermisoAsync(int rolId, int accesoId, int permisoId);
+
+        Task<bool> ExisteNombreRol(string nombre);
     }
 }

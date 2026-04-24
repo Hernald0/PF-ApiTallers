@@ -381,8 +381,44 @@ namespace UTNApiTalleres.Controllers
         }
 
 
-       
+        [HttpGet()]
+        [Route("validarNombreModelo/{nombreModelo}")]
+        public async Task<IActionResult> validarNombreModelo(string nombreModelo)
+        {
 
-        
+            try
+            {
+                var existeSN = await _tallerDao.ValidarNombreModelo(nombreModelo);
+                return Ok(existeSN);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
+        [HttpGet()]
+        [Route("validarNombreMarca/{nombreMarca}")]
+        public async Task<IActionResult> validarNombreMarca(string nombreMarca)
+        {
+
+            try
+            {
+                var existeSN = await _tallerDao.ValidarNombreMarca(nombreMarca);
+                return Ok(existeSN);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
+
     }
 }

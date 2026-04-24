@@ -73,32 +73,50 @@ namespace UTNApiTalleres.Data.Repositorio
 
             return db.QueryFirstOrDefault<string>(sql, new { usuarioId }) ;
         }
-        public async Task<List<AccesoDTO>> ObtenerAccesosAsync(int usuarioId)
+        public async Task<List<MenuGrupoDTO>> ObtenerAccesosAsync(int usuarioId)
         {
             var db = dbConnection();
+            /*
+            string sql_select = @"select a.""Id"", 
+                                         a.""Nombre"", 
+                                         a.""Ruta"", 
+                                         a.""Agrupador"",
+                                         pe.""PermisoId"", 
+                                         pe.""Etiqueta"", pe.""Descripcion""
+                                    from public.""Accesos"" as a 
+				                        inner join public.""RolAccesos"" ra
+		                                    on a.""Id"" = ra.""AccesoId""
+	                                    inner join public.""UsuarioRol"" ur
+		                                    on ra.""RolId"" = ur.""RolId""
+				                        LEFT JOIN public.""RolPermisos"" rp
+					                        on (ra.""AccesoId"" = rp.""AccesoId"" and					    
+						                        ra.""RolId"" = rp.""RolId"")
+				                        LEFT JOIN public.""Permisos"" pe
+					                        on (rp.""PermisoId"" = pe.""PermisoId"")
+			                        WHERE ur.""UserId"" = @Id
+                                      AND a.""Activo"" = true ";*/
 
-            string sql_select = @"select a.""Id"", a.""Nombre"", a.""Ruta"", pe.""PermisoId"", pe.""Etiqueta"", pe.""Descripcion""
-                        from public.""Accesos"" as a 
-				            inner join public.""RolAccesos"" ra
-		                        on a.""Id"" = ra.""AccesoId""
-	                        inner join public.""UsuarioRol"" ur
-		                        on ra.""RolId"" = ur.""RolId""
-				            LEFT JOIN public.""RolPermisos"" rp
-					            on (ra.""AccesoId"" = rp.""AccesoId"" and					    
-						            ra.""RolId"" = rp.""RolId"")
-				            LEFT JOIN public.""Permisos"" pe
-					            on (rp.""PermisoId"" = pe.""PermisoId"")
-			            WHERE ur.""UserId"" = @Id
-                          AND a.""Activo"" = true ";
-            /*select a.""Nombre"", a.""Ruta"" 
-            from public.""Accesos"" as a inner join public.""RolAccesos"" ra
-		            on a.""Id"" = ra.""AccesoId""
-	            inner join public.""UsuarioRol"" ur
-		            on ra.""RolId"" = ur.""RolId""
-            WHERE ur.""UserId"" = @usuarioId
-              AND a.""Activo"" = true"; 
+            string sql_select = @"select a.""Id"", 
+                                 a.""Nombre"", 
+                                 a.""Ruta"", 
+                                 a.""Agrupador"",
+                                 pe.""PermisoId"", 
+                                 pe.""Etiqueta"", 
+                                 pe.""Descripcion""
+                            from public.""Accesos"" as a 
+                                inner join public.""RolAccesos"" ra
+                                    on a.""Id"" = ra.""AccesoId""
+                                inner join public.""UsuarioRol"" ur
+                                    on ra.""RolId"" = ur.""RolId""
+                                LEFT JOIN public.""RolPermisos"" rp
+                                    on (ra.""AccesoId"" = rp.""AccesoId"" and					    
+                                        ra.""RolId"" = rp.""RolId"")
+                                LEFT JOIN public.""Permisos"" pe
+                                    on (rp.""PermisoId"" = pe.""PermisoId"")
+                        WHERE ur.""UserId"" = @Id
+                          AND a.""Activo"" = true
+                        ORDER BY a.""Agrupador"", a.""Nombre""";
 
-            return db.Query<AccesoDTO>(sql, new { usuarioId }).ToList();*/
             var accesoDict = new Dictionary<int, AccesoDTO>();
 
             await db.QueryAsync<AccesoDTO, Permiso, AccesoDTO>(
@@ -123,7 +141,17 @@ namespace UTNApiTalleres.Data.Repositorio
                 splitOn: "PermisoId"
             );
 
-            return accesoDict.Values.ToList();
+            // Agrupar acá antes de devolver
+            var menu = accesoDict.Values
+                .GroupBy(a => a.Agrupador ?? "General")   // si no tiene agrupador, va a "General"
+                .Select(g => new MenuGrupoDTO
+                {
+                    Agrupador = g.Key,
+                    Accesos = g.ToList()
+                })
+                .ToList();
+
+            return menu;
         }
     }
 }

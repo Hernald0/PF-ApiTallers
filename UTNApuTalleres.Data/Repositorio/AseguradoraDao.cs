@@ -135,6 +135,26 @@ namespace UTNApiTalleres.Data.Repositorio
 
         }
 
-      
+        public async Task<bool> ExisteNombreAseguradora(string nombre)
+        {
+            var db = dbConnection();
+
+            string sql = @"select count(*) from public.""Aseguradoras""
+                                where  upper(""Nombre"")  = @Nombre";
+
+            int cant = await db.QuerySingleAsync<int>(sql, new { Nombre = nombre.ToUpper() });
+
+            if (cant > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+
     }
 }

@@ -133,5 +133,12 @@ namespace UTNApiTalleres.Controllers
             }
 
         }
+
+        [HttpGet("validarNombreEstadoCivil/{nombre}")]
+        public async Task<IActionResult> validarNombreEstadoCivil(string nombre)
+        {
+            var accesos = await _EstadoCivilDao.ExisteNombreEstadoCivil(nombre);
+            return Ok(accesos);
+        }
     }
 }

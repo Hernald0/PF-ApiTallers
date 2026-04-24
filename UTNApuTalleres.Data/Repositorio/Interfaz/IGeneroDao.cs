@@ -23,6 +23,6 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
         //recuperar todos los objetos desde la base
         Task<IEnumerable<Genero>> findAll();
 
-
+        Task<bool> ExisteNombreGenero(string nombre);
     }
 }

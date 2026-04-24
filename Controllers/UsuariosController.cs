@@ -56,6 +56,21 @@ namespace UTNApiTalleres.Controllers
                 await _UsuarioDao.DeleteAsync(id);
                 return NoContent();
             }
-        }
+
+
+            [HttpGet("validarNombreUsuario/{nombre}")]
+            public async Task<IActionResult> validarNombreUsuario(string nombre)
+            {
+                var accesos = await _UsuarioDao.ExisteNombreUsuario(nombre);
+                return Ok(accesos);
+            }
+
+            [HttpGet("validarEmailUsuario/{ruta}")]
+            public async Task<IActionResult> validarEmailUsuario(string ruta)
+            {
+                var accesos = await _UsuarioDao.ExisteEmailUsuario(ruta);
+                return Ok(accesos);
+            }
+    }
      
 }

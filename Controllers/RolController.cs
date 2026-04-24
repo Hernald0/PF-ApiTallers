@@ -122,6 +122,14 @@ namespace UTNApiTalleres.Controllers
             return Ok(result);
 
         }
+
+        [HttpGet("validarNombreRol/{nombre}")]
+        public async Task<IActionResult> validarNombreRol(string nombre)
+        {
+            var accesos = await _rolService.ExisteNombreRol(nombre);
+            return Ok(accesos);
+        }
+
         /*private readonly RolDao _RolDao;
       
 

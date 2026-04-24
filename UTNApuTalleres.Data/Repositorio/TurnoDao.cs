@@ -82,7 +82,7 @@ namespace UTNApiTalleres.Data.Repositorio
 		                                    on t.""IdVehiculo"" = v.""Id""
 	                                    inner join public.""Personas"" as p
 		                                    on c.""PersonaId"" = p.""Id""
-                                    ";
+                                    order by t.""Id"" desc";
 
                 var oTurnos = await db.QueryAsync<Turno, Vehiculo, Cliente, Persona, Turno>(
                    sql_query,
@@ -296,7 +296,7 @@ namespace UTNApiTalleres.Data.Repositorio
             var sql_recepcion = @"select  t.""Id"" as tuId, t.""Id"", t.""FechaRecepcion"",  t.""IdCliente"", 
 		                                            t.""FechaRecepcion"", t.""HoraRecepcion"", t.""Combustible"", t.""Kilometraje"", t.""IdAseguradora"", t.""Inspector"", t.""NroSiniestro"", t.""Franquicia"", t.""MotivoConsulta"",	  
 		                                             t.""MotivoConsulta"", t.""IdVehiculo"", t.""HoraRecepcion"",
-		                                            s.""Id"" as sId, s.""Id"", s.""Nombre"", s.""Descripcion"", s.""FechaAlta"", s.""UsuarioAlta"", s.""FechaBaja"", s.""UsuarioBaja"", s.""Duracion_aproximada"", s.""Tipo"", s.""precioCosto"", s.""precioVenta"",	
+		                                            s.""Id"" as sId, s.""Id"", s.""Nombre"", s.""Descripcion"", s.""FechaAlta"", s.""UsuarioAlta"", s.""FechaBaja"", s.""UsuarioBaja"", s.""DuracionAproximada"", s.""Tipo"", s.""PrecioCosto"", s.""PrecioVenta"",	
 		                                            c.""Id"" as clId, c.""Id"", c.""PersonaId"", c.""TallerId"",
 		                                            p.""Id"" as peId, p.""Id"", p.""Nombre"", p.""RazonSocial"", p.""Apellido"", p.""FecNacimiento"", p.""IdLocalidad"", p.""Barrio"", p.""Direccion"", p.""NroDireccion"", p.""Dpto"", p.""Piso"", p.""Telcelular"", p.""Telfijo"", p.""Email"", p.""IdTipoIdentificador"", p.""NroIdentificacion"", p.""TipoPersona"", p.""IdGenero"", p.""Ocupacion"", p.""IdEstadoCivil"", p.""FechaAlta"", p.""UsrAlta"", p.""FechaBaja"", p.""UsrBaja"", p.""FechaMod"", p.""UsrMod"",
 		                                            v.""Id"" as veId, v.""Id"", v.""IdModelo"", v.""Patente"", v.""Color"", v.""NumeroSerie"", anio, v.""IdCliente"", v.""FechaAlta"", v.""UsrAlta"", v.""FechaMod"", v.""UsrMod"", v.""FechaBaja"", v.""UsrBaja"",
@@ -324,7 +324,7 @@ namespace UTNApiTalleres.Data.Repositorio
             var sql_turno = @"select      t.""Id"" as tuId, t.""Id"", t.""Fecha"", t.""IdTaller"", t.""IdCliente"", 
 		                                            t.""FechaAlta"", t.""UsuarioAlta"", t.""FechaMod"", t.""UsuarioMod"", 
 		                                            t.""FechaBaja"", t.""UsuarioBaja"", t.""MotivoCancelacion"", t.""Status"", t.""MotivoConsulta"", t.""IdVehiculo"", t.""Hora"",
-		                                            s.""Id"" as sId, s.""Id"", s.""Nombre"", s.""Descripcion"", s.""FechaAlta"", s.""UsuarioAlta"", s.""FechaBaja"", s.""UsuarioBaja"", s.""Duracion_aproximada"", s.""Tipo"", s.""precioCosto"", s.""precioVenta"",	
+		                                            s.""Id"" as sId, s.""Id"", s.""Nombre"", s.""Descripcion"", s.""FechaAlta"", s.""UsuarioAlta"", s.""FechaBaja"", s.""UsuarioBaja"", s.""DuracionAproximada"", s.""Tipo"", s.""PrecioCosto"", s.""PrecioVenta"",	
 	                                                c.""Id"" as clId, c.""Id"", c.""PersonaId"", c.""TallerId"",
 	                                                p.""Id"" as peId, p.""Id"", p.""Nombre"", p.""RazonSocial"", p.""Apellido"", p.""FecNacimiento"", p.""IdLocalidad"", p.""Barrio"", p.""Direccion"", p.""NroDireccion"", p.""Dpto"", p.""Piso"", p.""Telcelular"", p.""Telfijo"", p.""Email"", p.""IdTipoIdentificador"", p.""NroIdentificacion"", p.""TipoPersona"", p.""IdGenero"", p.""Ocupacion"", p.""IdEstadoCivil"", p.""FechaAlta"", p.""UsrAlta"", p.""FechaBaja"", p.""UsrBaja"", p.""FechaMod"", p.""UsrMod"",
 	                                                v.""Id"" as veId, v.""Id"", v.""IdModelo"", v.""Patente"", v.""Color"", v.""NumeroSerie"", anio, v.""IdCliente"", v.""FechaAlta"", v.""UsrAlta"", v.""FechaMod"", v.""UsrMod"", v.""FechaBaja"", v.""UsrBaja"",
@@ -403,7 +403,7 @@ namespace UTNApiTalleres.Data.Repositorio
                 var sql_query_recepcion = @"select  t.""Id"" as tuId, t.""Id"", t.""FechaRecepcion"",  t.""IdCliente"", 
 		                                            t.""FechaRecepcion"", t.""HoraRecepcion"", t.""Combustible"", t.""Kilometraje"", t.""IdAseguradora"", t.""Inspector"", t.""NroSiniestro"", t.""Franquicia"", t.""MotivoConsulta"",	  
 		                                             t.""MotivoConsulta"", t.""IdVehiculo"", t.""HoraRecepcion"",
-		                                            s.""Id"" as sId, s.""Id"", s.""Nombre"", s.""Descripcion"", s.""FechaAlta"", s.""UsuarioAlta"", s.""FechaBaja"", s.""UsuarioBaja"", s.""Duracion_aproximada"", s.""Tipo"", s.""precioCosto"", s.""precioVenta"",	
+		                                            s.""Id"" as sId, s.""Id"", s.""Nombre"", s.""Descripcion"", s.""FechaAlta"", s.""UsuarioAlta"", s.""FechaBaja"", s.""UsuarioBaja"", s.""DuracionAproximada"", s.""Tipo"", s.""PrecioCosto"", s.""PrecioVenta"",	
 		                                            c.""Id"" as clId, c.""Id"", c.""PersonaId"", c.""TallerId"",
 		                                            p.""Id"" as peId, p.""Id"", p.""Nombre"", p.""RazonSocial"", p.""Apellido"", p.""FecNacimiento"", p.""IdLocalidad"", p.""Barrio"", p.""Direccion"", p.""NroDireccion"", p.""Dpto"", p.""Piso"", p.""Telcelular"", p.""Telfijo"", p.""Email"", p.""IdTipoIdentificador"", p.""NroIdentificacion"", p.""TipoPersona"", p.""IdGenero"", p.""Ocupacion"", p.""IdEstadoCivil"", p.""FechaAlta"", p.""UsrAlta"", p.""FechaBaja"", p.""UsrBaja"", p.""FechaMod"", p.""UsrMod"",
 		                                            v.""Id"" as veId, v.""Id"", v.""IdModelo"", v.""Patente"", v.""Color"", v.""NumeroSerie"", anio, v.""IdCliente"", v.""FechaAlta"", v.""UsrAlta"", v.""FechaMod"", v.""UsrMod"", v.""FechaBaja"", v.""UsrBaja"",
@@ -429,7 +429,7 @@ namespace UTNApiTalleres.Data.Repositorio
                 var sql_query_turno = @"select      t.""Id"" as tuId, t.""Id"", t.""Fecha"", t.""IdTaller"", t.""IdCliente"", 
 		                                            t.""FechaAlta"", t.""UsuarioAlta"", t.""FechaMod"", t.""UsuarioMod"", 
 		                                            t.""FechaBaja"", t.""UsuarioBaja"", t.""MotivoCancelacion"", t.""Status"", t.""MotivoConsulta"", t.""IdVehiculo"", t.""Hora"",
-		                                            s.""Id"" as sId, s.""Id"", s.""Nombre"", s.""Descripcion"", s.""FechaAlta"", s.""UsuarioAlta"", s.""FechaBaja"", s.""UsuarioBaja"", s.""Duracion_aproximada"", s.""Tipo"", s.""precioCosto"", s.""precioVenta"",	
+		                                            s.""Id"" as sId, s.""Id"", s.""Nombre"", s.""Descripcion"", s.""FechaAlta"", s.""UsuarioAlta"", s.""FechaBaja"", s.""UsuarioBaja"", s.""DuracionAproximada"", s.""Tipo"", s.""PrecioCosto"", s.""PrecioVenta"",	
 	                                                c.""Id"" as clId, c.""Id"", c.""PersonaId"", c.""TallerId"",
 	                                                p.""Id"" as peId, p.""Id"", p.""Nombre"", p.""RazonSocial"", p.""Apellido"", p.""FecNacimiento"", p.""IdLocalidad"", p.""Barrio"", p.""Direccion"", p.""NroDireccion"", p.""Dpto"", p.""Piso"", p.""Telcelular"", p.""Telfijo"", p.""Email"", p.""IdTipoIdentificador"", p.""NroIdentificacion"", p.""TipoPersona"", p.""IdGenero"", p.""Ocupacion"", p.""IdEstadoCivil"", p.""FechaAlta"", p.""UsrAlta"", p.""FechaBaja"", p.""UsrBaja"", p.""FechaMod"", p.""UsrMod"",
 	                                                v.""Id"" as veId, v.""Id"", v.""IdModelo"", v.""Patente"", v.""Color"", v.""NumeroSerie"", anio, v.""IdCliente"", v.""FechaAlta"", v.""UsrAlta"", v.""FechaMod"", v.""UsrMod"", v.""FechaBaja"", v.""UsrBaja"",

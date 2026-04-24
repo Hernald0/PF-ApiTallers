@@ -75,10 +75,10 @@ namespace UTNApiTalleres.Data.Repositorio
                                     p.""Id"" as idp, p.*,
     
                                     r.""Id"" as idr, r.""Nombre"" as ""NombreRepuesto"", r.""Descripcion"" as ""DescripcionRepuesto"", 
-                                    r.""precioCosto"" as ""CostoRepuesto"", r.""precioVenta"" as ""VentaRepuesto"",
+                                    r.""PrecioCosto"" as ""CostoRepuesto"", r.""PrecioVenta"" as ""VentaRepuesto"",
     
                                     s.""Id"" as ids, s.""Nombre"" as ""NombreServicio"", s.""Descripcion"" as ""DescripcionServicio"", 
-                                    s.""precioCosto"" as ""CostoServicio"", s.""precioVenta"" as ""VentaServicio""
+                                    s.""PrecioCosto"" as ""CostoServicio"", s.""PrecioVenta"" as ""VentaServicio""
     
                                 FROM public.""Ventas"" v
                                 LEFT JOIN public.""VentaDetalles"" vd ON v.""Id"" = vd.""VentaId""
@@ -86,7 +86,8 @@ namespace UTNApiTalleres.Data.Repositorio
                                 LEFT JOIN public.""Personas"" p ON c.""PersonaId"" = p.""Id""
                                 LEFT JOIN public.""Repuestos"" r ON vd.""RepuestoId"" = r.""Id""
                                 LEFT JOIN public.""Servicios"" s ON vd.""ServicioId"" = s.""Id""
-                                WHERE v.""Id"" = @Id;";
+                                WHERE v.""Id"" = @Id
+                                ORDER BY v.""Id"" desc;";
 
             using (var connection = dbConnection())
             {
@@ -162,7 +163,8 @@ namespace UTNApiTalleres.Data.Repositorio
                                         on v.""ClienteId"" = c.""Id""
 
                                             inner join public.""Personas"" as p
-                                        on c.""PersonaId"" = p.""Id""";
+                                        on c.""PersonaId"" = p.""Id""
+                                 ORDER BY v.""Id"" desc;";
 
 
 
@@ -321,6 +323,12 @@ namespace UTNApiTalleres.Data.Repositorio
                     venta.Id = connection.ExecuteScalar<int>(query, paramCabecera);
                 }
 
+
+                if (venta.Items != null && venta.Items.Any())
+                {
+                    this.CrearDetalles(venta.Id, venta.Items);
+                };
+                /*
                 foreach (var detalle in venta.Items)
                     {
                         detalle.VentaId = (int)venta.Id;
@@ -342,14 +350,14 @@ namespace UTNApiTalleres.Data.Repositorio
                     };
 
                     connection.Execute(detalleQuery, paramItem);
-                   
-                }
+                   */
+                
 
                
             }
         }
 
-        private void CrearDetalles(int IdVenta, List<ItemVentaCreateDTO> Items)
+        private void CrearDetalles(int? IdVenta, List<ItemVentaCreateDTO> Items)
         {
 
            
@@ -370,8 +378,8 @@ namespace UTNApiTalleres.Data.Repositorio
                         var paramItem = new
                         {
                             @VentaId = IdVenta,
-                            @ServicioId = (detalle.Tipo == "servicio") ? (object)detalle.ItemId : DBNull.Value,
-                            @RepuestoId = (detalle.Tipo == "repuesto") ? (object)detalle.ItemId : DBNull.Value,
+                            @ServicioId = (detalle.Tipo.ToLower() == "servicio") ? (object)detalle.ItemId : DBNull.Value,
+                            @RepuestoId = (detalle.Tipo.ToLower() == "repuesto") ? (object)detalle.ItemId : DBNull.Value,
                             @Cantidad = detalle.Cantidad,
                             @PrecioUnitario = detalle.PrecioUnitario,
                             @Descuento = detalle.Bonificacion,
@@ -386,23 +394,70 @@ namespace UTNApiTalleres.Data.Repositorio
 
         }
 
-        public void ModificarVenta(VentaCreateDTO venta)
+        public int? ModificarVenta(VentaCreateDTO venta)
         {
             using (var connection = dbConnection())
             {
-                using (var transaction = connection.BeginTransaction())
-                {
+                //using (var transaction = connection.BeginTransaction())
+                //{ 
+
+          
                     var query = @"
-                    UPDATE public.""Venta"" 
-                    SET ""ClienteId"" = @ClienteId, ""Fecha"" = @Fecha, ""MontoTotal"" = @MontoTotal, ""Estado"" = @Estado
-                    WHERE ""Id"" = @Id;
+                    UPDATE public.""Ventas""
+	                    SET  
+		                    ""ClienteId""= @ClienteId , 
+		                    ""VehiculoId""= @VehiculoId, 
+		                    ""FechaEmision""= @FechaEmision, 
+		                    ""Observaciones""= @Observaciones, 
+		                    ""MontoTotal""= @MontoTotal, 
+		                    ""Usuario""= @Usuario, 
+		                    ""Descuento""= @Descuento, 
+		                    ""Efectivo""= @Efectivo, 
+		                    ""TarjetaCredito""= @TarjetaCredito, 
+		                    ""MontoTarjetaCredito""= @MontoTarjetaCredito, 
+		                    ""CuentaCorriente""= @CuentaCorriente, 
+		                    ""Estado""= @Estado,  
+                            ""NroVenta"" = CASE 
+                                                WHEN @Estado = 'venta'
+                                                THEN nextval('nro_venta_seq')
+                                                ELSE ""NroVenta""
+                                             END
+                        WHERE ""Id""= @Id 
+                        Returning ""NroVenta""
                 ";
 
-                    connection.Execute(query, venta, transaction);
+                var paramCabecera = new
+                {
 
-                    var deleteDetallesQuery = "DELETE FROM public.\"VentaDetalles\" WHERE \"VentaId\" = @Id;";
-                    connection.Execute(deleteDetallesQuery, new { Id = venta.Id }, transaction);
+                    @ClienteId = venta.ClienteId,
+                    @VehiculoId = venta.VehiculoId,
+                    @FechaEmision = (DateTime?) DateTime.Now,
+                    @Observaciones = (string?)venta.Observaciones,
+                    @Usuario = venta.Usuario,
+                    @MontoTotal = (decimal?)venta.MontoTotal,
+                    @Descuento = (decimal?)venta.Descuento,
+                    @Efectivo = (decimal?)venta.Efectivo,
+                    @TarjetaCredito = (string?)venta.TarjetaCredito,
+                    @MontoTarjetaCredito = (decimal?)venta.MontoTarjetaCredito,
+                    @CuentaCorriente = (decimal?)venta.CuentaCorriente,
+                    @Estado = venta.TipoOperacion,
+                    @Id = venta.Id,
 
+
+                };
+
+                //connection.Execute(query,  paramCabecera  );
+                int? NroVenta =   connection.QuerySingle<int?>(query, paramCabecera);
+
+                var deleteDetallesQuery = "DELETE FROM public.\"VentaDetalles\" WHERE \"VentaId\" = @Id;";
+                    connection.Execute(deleteDetallesQuery, new { Id = venta.Id });
+
+                    if (venta.Items != null && venta.Items.Any())
+                    {
+                        this.CrearDetalles(venta.Id, venta.Items);
+                    };
+
+                /*
                     foreach (var detalle in venta.Items)
                     {
                         detalle.VentaId = (int)venta.Id;
@@ -411,12 +466,12 @@ namespace UTNApiTalleres.Data.Repositorio
                         (""VentaId"", ""ServicioId"", ""RepuestoId"", ""Cantidad"", ""PrecioUnitario"", ""Descuento"", ""Subtotal"") 
                         VALUES (@VentaId, @ServicioId, @RepuestoId, @Cantidad, @PrecioUnitario, @Descuento, @Subtotal);
                     ";
-                        connection.Execute(detalleQuery, detalle, transaction);
+                        connection.Execute(detalleQuery, detalle);
                     }
+                */
 
-                    transaction.Commit();
+                return NroVenta;
 
-                }
             }
         }
 

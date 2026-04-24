@@ -17,7 +17,7 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         void AgregarVenta(VentaCreateDTO venta);
 
-        void ModificarVenta(VentaCreateDTO venta);
+        int? ModificarVenta(VentaCreateDTO venta);
 
         void DeleteVenta(int id);
 

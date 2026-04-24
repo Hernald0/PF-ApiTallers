@@ -122,5 +122,43 @@ namespace UTNApiTalleres.Data.Repositorio
             using var db = dbConnection();
             await db.ExecuteAsync(@"DELETE FROM public.""Usuarios"" WHERE ""Id""=@id", new { id });
         }
-    }
+
+        public async Task<bool> ExisteEmailUsuario(string email)
+        {
+            var db = dbConnection();
+
+        string sql = @"select count(*) from public.""Usuarios""
+                            where upper(""Email"") = @Email";
+
+        int cant = await db.QuerySingleAsync<int>(sql, new { Email = email.ToUpper() });
+
+            if (cant > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> ExisteNombreUsuario(string usuario)
+        {
+            var db = dbConnection();
+
+            string sql = @"select count(*) from public.""Usuarios""
+                            where upper(""User"") = @Usuario";
+
+            int cant = await db.QuerySingleAsync<int>(sql, new { Usuario = usuario.ToUpper() });
+
+            if (cant > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+}
 }

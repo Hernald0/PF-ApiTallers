@@ -20,7 +20,7 @@ namespace UTNApiTalleres.Infrastructure.Repositories.Interface
 
         Task<bool> ExistsAsync(int id);
 
-
+        Task<bool> existeNombreAsync(string nombre);
 
 
     }

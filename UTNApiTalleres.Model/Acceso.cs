@@ -11,7 +11,9 @@ namespace WebApiTalleres.Models
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public string Ruta { get; set; }  // ej: "/usuarios", "/roles"
+        public string Ruta { get; set; }
+
+        public string Agrupador { get; set; }
         public bool Activo { get; set; }
 
         public List<Permiso>? Permisos { get; set; } = new List<Permiso>();

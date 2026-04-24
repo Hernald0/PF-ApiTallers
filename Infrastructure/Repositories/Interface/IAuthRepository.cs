@@ -12,7 +12,8 @@ namespace UTNApiTalleres.Infrastructure.Repositories.Interface
     {
         Usuario ValidarUsuario(string usuario, string password);
         string ObtenerRol(int usuarioId);
-        Task<List<AccesoDTO>> ObtenerAccesosAsync(int usuarioId);
+        Task<List<MenuGrupoDTO>> ObtenerAccesosAsync(int usuarioId);
+
 
     }
 

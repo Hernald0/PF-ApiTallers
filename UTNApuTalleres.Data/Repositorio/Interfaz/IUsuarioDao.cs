@@ -18,5 +18,10 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
         Task UpdateAsync(Usuario usuario);
 
         Task DeleteAsync(int id);
+
+        Task<bool> ExisteNombreUsuario(string usuario);
+
+        Task<bool> ExisteEmailUsuario(string email);
+
     }
 }

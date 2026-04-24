@@ -76,5 +76,19 @@ namespace UTNApiTalleres.Controllers
             await _AccesoDao.SetAccesosPorRolAsync(rolId, accesosIds);
             return Ok();
         }
+
+        [HttpGet("validarNombreAcceso/{nombre}")]
+        public async Task<IActionResult> validarNombreAcceso(string nombre)
+        {
+            var accesos = await _AccesoDao.ExisteNombreAcceso(nombre);
+            return Ok(accesos);
+        }
+
+        [HttpGet("validarRutaAcceso/{ruta}")]
+        public async Task<IActionResult> validarRutaAcceso(string ruta)
+        {
+            var accesos = await _AccesoDao.ExisteRutaAcceso(ruta);
+            return Ok(accesos);
+        }
     }
 }

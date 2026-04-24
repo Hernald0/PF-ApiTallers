@@ -22,5 +22,7 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         //recuperar todos los objetos desde la base
         Task<IEnumerable<EstadoCivil>> findAll();
+
+        Task<bool> ExisteNombreEstadoCivil(string nombre);
     }
 }

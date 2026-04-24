@@ -77,7 +77,8 @@ namespace UTNApiTalleres
             var postgresConfiguration = new PostgresqlConfiguration(connectionString);
             services.AddSingleton(postgresConfiguration);
 
-        
+            
+            services.AddHttpContextAccessor();
             services.AddScoped<IAseguradoraDao, AseguradoraDao>();
             services.AddScoped<IClienteDao, ClienteDao>();
             services.AddScoped<IPersonaDao, PersonaDao>();
@@ -88,7 +89,7 @@ namespace UTNApiTalleres
             services.AddScoped<IPaisDao, PaisDao>();
             services.AddScoped<IConfiguracionDao, ConfiguracionDao>();
             services.AddScoped<ITurnoDao, TurnoDao>();
-            services.AddScoped<IServRepDao, ServRepDao>();
+            //services.AddScoped<IServRepDao, ServRepDao>();
             services.AddScoped<IVentaDao, VentaDao>();
             services.AddScoped<IOrdenDao, OrdenDao>();
             services.AddScoped<IUsuarioDao, UsuarioDao>();
@@ -100,6 +101,10 @@ namespace UTNApiTalleres
             services.AddScoped<IRolRepository, RolRepository>();
             services.AddScoped<IRolAccesoRepository, RolAccesoRepository>();
             services.AddScoped<IRolAccesoPermisoRepository, RolAccesoPermisoRepository>();
+            services.AddScoped<IServRepService, ServRepService>();
+            services.AddScoped<IServRepRepository, ServRepRepository>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+            
 
             services.AddSwaggerGen(options =>
             {

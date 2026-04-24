@@ -168,10 +168,7 @@ namespace UTNApiTalleres.Data.Repositorio
                 {
                     var query = @"
                     UPDATE public.""Ordenes"" 
-                    SET   
-                        
-	                    ""VentaId"" = @VentaId,
-                       
+                    SET   ""VentaId"" = @VentaId                      
                     WHERE ""Id"" = @Id;
                 ";
                  
@@ -372,9 +369,9 @@ namespace UTNApiTalleres.Data.Repositorio
 		                                 rv.""FechaRecepcion"", rv.""HoraRecepcion"", rv.""Combustible"", rv.""Kilometraje"", rv.""IdAseguradora"", rv.""Inspector"", rv.""NroSiniestro"", rv.""Franquicia"", rv.""MotivoConsulta"",		
 		                                od.""Id"" as itemid, od.""ServicioId"", od.""RepuestoId"", od.""PrecioUnitario"", od.""Bonificacion"", od.""Cantidad"", od.""SubTotal"",
                                         r.""Id"" as repId, r.""Nombre"" as ""NombreRepuesto"", r.""Descripcion"" as ""DescripcionRepuesto"", 
-		                                r.""precioCosto"" as ""CostoRepuesto"", r.""precioVenta"" as ""VentaRepuesto"",
+		                                r.""PrecioCosto"" as ""CostoRepuesto"", r.""PrecioVenta"" as ""VentaRepuesto"",
 		                                s.""Id"" as serId, s.""Nombre"" as ""NombreServicio"", s.""Descripcion"" as ""DescripcionServicio"", 
-		                                s.""precioCosto"" as ""CostoServicio"", s.""precioVenta"" as ""VentaServicio"",
+		                                s.""PrecioCosto"" as ""CostoServicio"", s.""PrecioVenta"" as ""VentaServicio"",
 		                                c.""Id"" as clId, c.""Id"", c.""PersonaId"", c.""TallerId"",
 		                                p.""Id"" as peId, p.""Id"", p.""Nombre"", p.""RazonSocial"", p.""Apellido"", p.""FecNacimiento"", p.""IdLocalidad"", p.""Barrio"", p.""Direccion"", p.""NroDireccion"", p.""Dpto"", p.""Piso"", p.""Telcelular"", p.""Telfijo"", p.""Email"", p.""IdTipoIdentificador"", p.""NroIdentificacion"", p.""TipoPersona"", p.""IdGenero"", p.""Ocupacion"", p.""IdEstadoCivil"", p.""FechaAlta"", p.""UsrAlta"", p.""FechaBaja"", p.""UsrBaja"", p.""FechaMod"", p.""UsrMod"",
 		                                v.""Id"" as veId, v.""Id"", v.""IdModelo"", v.""Patente"", v.""Color"", v.""NumeroSerie"", anio, v.""IdCliente"", v.""FechaAlta"", v.""UsrAlta"", v.""FechaMod"", v.""UsrMod"", v.""FechaBaja"", v.""UsrBaja"",

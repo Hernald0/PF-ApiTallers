@@ -29,7 +29,7 @@ namespace UTNApiTalleres.Data.Repositorio
         {
             using var db = dbConnection();
 
-            var sql_select = @"SELECT  a.""Id"", a.""Nombre"", a.""Ruta"", a.""Activo"",
+            var sql_select = @"SELECT  a.""Id"", a.""Nombre"", a.""Ruta"",a.""Agrupador"", a.""Activo"",
 	                                   p.""PermisoId"", p.""Etiqueta"", p.""Descripcion""
                                 FROM public.""Accesos"" a
 	                                left join 
@@ -65,8 +65,8 @@ namespace UTNApiTalleres.Data.Repositorio
         public async Task<int> InsertAsync(Acceso acceso)
         {
             using var db = dbConnection();
-            var sql_acceso = @"INSERT INTO public.""Accesos"" (""Nombre"", ""Ruta"", ""Activo"")
-                        VALUES (@Nombre, @Ruta, @Activo)
+            var sql_acceso = @"INSERT INTO public.""Accesos"" (""Nombre"", ""Ruta"",""Agrupador"", ""Activo"")
+                        VALUES (@Nombre, @Ruta, @Agrupador, @Activo)
                         RETURNING ""Id"";";
             var AccesoId =  await db.ExecuteScalarAsync<int>(sql_acceso, acceso);
 
@@ -91,7 +91,7 @@ namespace UTNApiTalleres.Data.Repositorio
         {
             using var db = dbConnection();
             
-            var sql = @"UPDATE public.""Accesos"" SET ""Nombre""=@Nombre, ""Ruta""=@Ruta, ""Activo""=@Activo WHERE ""Id""=@Id";
+            var sql = @"UPDATE public.""Accesos"" SET ""Nombre""=@Nombre, ""Ruta""=@Ruta, ""Agrupador""=@Agrupador, ""Activo""=@Activo WHERE ""Id""=@Id";
            
             await db.ExecuteAsync(sql, acceso);
 
@@ -214,5 +214,42 @@ namespace UTNApiTalleres.Data.Repositorio
             tran.Commit();
         }
 
+        public async Task<bool> ExisteNombreAcceso(string nombre)
+        {
+            var db = dbConnection();
+
+            string sql = @"select count(*) from public.""Accesos""
+                            where upper(""Nombre"") = @Nombre";
+
+            int cant = await db.QuerySingleAsync<int>(sql, new { Nombre = nombre.ToUpper() });
+
+            if (cant > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> ExisteRutaAcceso(string ruta)
+        {
+            var db = dbConnection();
+
+            string sql = @"select count(*) from public.""Accesos""
+                            where REPLACE(upper(""Ruta""),'/','') = @Ruta";
+
+            int cant = await db.QuerySingleAsync<int>(sql, new { Ruta = ruta.ToUpper() });
+
+            if (cant > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

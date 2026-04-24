@@ -76,7 +76,7 @@ namespace UTNApiTalleres.Data.Repositorio
             var sql_query = @"
                             SELECT  ""Id"", ""Nombre"", ""Descripcion"", 
                                     ""FechaAlta"", ""UsuarioAlta"", ""FechaBaja"", ""UsuarioBaja"", 
-                                    ""Duracion_aproximada"", ""Tipo"", ""precioCosto"", ""precioVenta""
+                                    ""DuracionAproximada"", ""Tipo"", ""PrecioCosto"", ""PrecioVenta""
                             FROM public.""Servicios""  ";
 
             using (var db = dbConnection())
@@ -154,10 +154,10 @@ namespace UTNApiTalleres.Data.Repositorio
 
             const string sql = @"
                 select * from (
-                                SELECT ""Id"", ""Nombre"" as nombre, 'servicio' as tipo, ""Descripcion"", ""precioCosto"", ""precioVenta"", ""Duracion_aproximada"", ""Tipo"" as clase, null as stock
+                                SELECT ""Id"", ""Nombre"" as nombre, 'servicio' as tipo, ""Descripcion"", ""PrecioCosto"", ""PrecioVenta"", ""DuracionAproximada"", ""Tipo"" as clase, null as stock
 	                                FROM public.""Servicios""
                                 union
-                                SELECT ""Id"", ""Nombre"", 'repuesto' as tipo, ""Descripcion"", ""precioCosto"", ""precioVenta"", null as ""Duracion_aproximada"", null as ""Tipo"", ""Stock""
+                                SELECT ""Id"", ""Nombre"", 'repuesto' as tipo, ""Descripcion"", ""PrecioCosto"", ""PrecioVenta"", null as ""DuracionAproximada"", null as ""Tipo"", ""Stock""
 	                                FROM public.""Repuestos"") as tabla
                 WHERE lower(nombre) LIKE '%' || lower(@Cadena) || '%' and ( @Tipo IS NULL OR tipo = @Tipo);";
 

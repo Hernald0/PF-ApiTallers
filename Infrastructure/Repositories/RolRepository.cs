@@ -154,6 +154,23 @@ namespace UTNApiTalleres.Infrastructure.Repositories
             return existe;
         }
 
+        public async Task<bool> existeNombreAsync(string nombre)
+        {
+            var db = dbConnection();
 
+            string sql = @"select count(*) from public.""Roles""
+                            where upper(""Nombre"") = @Nombre";
+
+            int cant = await db.QuerySingleAsync<int>(sql, new { Nombre = nombre.ToUpper() });
+
+            if (cant > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

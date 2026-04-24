@@ -146,6 +146,25 @@ namespace UTNApiTalleres.Data.Repositorio
             }
         }
 
-       
+        public async Task<bool> ExisteNombreEstadoCivil(string nombre)
+        {
+            var db = dbConnection();
+
+            string sql = @"select count(*) from public.""Estadociviles""
+                                where  upper(""Descripcion"")  = @Descripcion";
+
+            int cant = await db.QuerySingleAsync<int>(sql, new { Descripcion = nombre.ToUpper() });
+
+            if (cant > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
     }
 }

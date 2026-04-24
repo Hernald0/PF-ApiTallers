@@ -9,8 +9,16 @@ namespace UTNApiTalleres.Application.DTOs
         public string Nombre { get; set; }
         public string Ruta { get; set; }
 
+        public  string Agrupador { get; set; }
+
         public List<Permiso>?  Permisos { get; set; }
 
+    }
+
+    public class MenuGrupoDTO
+    {
+        public string Agrupador { get; set; }
+        public List<AccesoDTO> Accesos { get; set; }
     }
 
 }

@@ -8,10 +8,10 @@ namespace UTNApiTalleres.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ServiciosRepuestosController : Controller
-    {
+    public class AlgoController : Controller
+    {  //ServiciosRepuestos
         private readonly IServRepDao _servRepDao;
-        public ServiciosRepuestosController(IServRepDao ServRepDao)
+        public AlgoController(IServRepDao ServRepDao)
         {
             _servRepDao = ServRepDao;
         }
@@ -110,6 +110,9 @@ namespace UTNApiTalleres.Controllers
 
 
         }
+
+
+    
 
 
     }

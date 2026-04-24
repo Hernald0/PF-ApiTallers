@@ -111,6 +111,25 @@ namespace UTNApiTalleres.Data.Repositorio
             }
         }
 
-      
+        public async Task<bool> ExisteNombreTipoIdentificador(string nombre)
+        {
+            var db = dbConnection();
+
+            string sql = @"select count(*) from public.""Tipoidentificadores""
+                                where  upper(""Identificador"")  = @Nombre";
+
+            int cant = await db.QuerySingleAsync<int>(sql, new { Nombre = nombre.ToUpper() });
+
+            if (cant > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
     }
 }

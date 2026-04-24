@@ -40,5 +40,7 @@ namespace WebApiTalleres.Models
         public string observaciones { get; set; }
 
         public string estado { get; set; }
+
+        public int? nroVenta { get; set; }
     }
 }

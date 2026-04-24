@@ -49,6 +49,10 @@ namespace UTNApiTalleres.Data.Repositorio.Interfaz
 
         Task<object> ValidarPersonaAsync(vmIdentificador pvmIdentificador, string tipo);
 
+        Task<bool> ValidarNombreModelo(string nombre);
+
+        Task<bool> ValidarNombreMarca(string nombre);
+
 
     }
 

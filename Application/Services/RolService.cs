@@ -110,8 +110,12 @@ namespace UTNApiTalleres.Application.Services
             return await _rolAccesoPermisoRepository.deleteRolAccesoPermisoAsync(rolId, accesoId, permisoId);
         }
 
+        public async Task<bool> ExisteNombreRol(string nombre)
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                throw new ArgumentException("Se debe ingresar un nombre para el Rol.");
 
-
-
+            return await _rolRepository.existeNombreAsync(nombre);
+        }
     }
 }
